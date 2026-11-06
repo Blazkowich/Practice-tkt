@@ -1,9 +1,13 @@
 <Solution>
-  <Project Path="EPM.TKT.WebApi/EPM.TKT.WebApi.csproj" />
   <Project Path="EPM.TKT.App/EPM.TKT.App.csproj" />
   <Project Path="EPM.TKT.Domain/EPM.TKT.Domain.csproj" />
-  <Project Path="EPM.TKT.Infrastructure/EPM.TKT.Infrastructure.csproj" />
   <Project Path="EPM.TKT.External/EPM.TKT.External.csproj" />
+  <Project Path="EPM.TKT.Infrastructure/EPM.TKT.Infrastructure.csproj" />
   <Project Path="EPM.TKT.Mediator/EPM.TKT.Mediator.csproj" Id="301c287a-ba09-411b-9c9d-0d685449ed9e" />
   <Project Path="EPM.TKT.Tests/EPM.TKT.Tests.csproj" />
+  <Project Path="EPM.TKT.WebApi/EPM.TKT.WebApi.csproj" />
+  <Project Path="TKTDatabase/TKTDatabase.sqlproj" Id="fc333df2-a7bd-4505-b7f6-0f581ded80ff">
+    <Build />
+    <Deploy />
+  </Project>
 </Solution>

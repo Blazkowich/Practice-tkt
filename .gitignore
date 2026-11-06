@@ -92,3 +92,6 @@ secrets.json
 *.bak
 *.tmp
 *.swp
+/docs/codemie/analytics
+/TKTDatabase/TKTDatabase.dbmdl
+/TKTDatabase/TKTDatabase.jfm
