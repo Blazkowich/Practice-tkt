@@ -1,31 +1,40 @@
-﻿/*
-Post-Deployment Script Template							
+/*
+Post-Deployment Script
 --------------------------------------------------------------------------------------
- This file contains SQL statements that will be appended to the build script.		
- Use SQLCMD syntax to include a file in the post-deployment script.			
- Example:      :r .\myfile.sql								
- Use SQLCMD syntax to reference a variable in the post-deployment script.		
- Example:      :setvar TableName MyTable							
-               SELECT * FROM [$(TableName)]					
+ SQLCMD :r is a preprocessor directive processed before SQL execution.
+ The IF '$(DataSource)' = 'TestData' block controls whether the included
+ test-data scripts actually execute — the files themselves contain no guards.
 --------------------------------------------------------------------------------------
 */
 
 --------------------------------------------------------------------------------------
--- REFERENCE DATA
+-- REFERENCE DATA  (always seeded — idempotent MERGE)
+--------------------------------------------------------------------------------------
+:r ".\Reference Data\tkt\SeatType.sql"
+:r ".\Reference Data\tkt\SeatState.sql"
+:r ".\Reference Data\tkt\PriceCategory.sql"
+:r ".\Reference Data\tkt\EventStatus.sql"
+:r ".\Reference Data\sec\Role.sql"
+
+--------------------------------------------------------------------------------------
+-- TEST DATA  (runs only when DataSource = TestData)
+-- Ordered by dependency: referenced tables before referencing tables.
 --------------------------------------------------------------------------------------
 
-/*
-:r ".\Reference Data\tkt\Something.sql"
-*/
-
---------------------------------------------------------------------------------------
--- TEST DATA
---------------------------------------------------------------------------------------
-/*
-IF '$(DataSource)' = 'Test Data'
+IF '$(DataSource)' = 'TestData'
 BEGIN
-/*
-:r ".\Test Data\tkt\Something.sql"
-*/
+    :r ".\TestData\tkt\Venues.sql"
+    :r ".\TestData\tkt\Sections.sql"
+    :r ".\TestData\tkt\Rows.sql"
+    :r ".\TestData\tkt\VenueSeats.sql"
+    :r ".\TestData\tkt\Events.sql"
+    :r ".\TestData\tkt\Offers.sql"
+    :r ".\TestData\tkt\Prices.sql"
+    :r ".\TestData\tkt\EventSeats.sql"
+    :r ".\TestData\sec\Users.sql"
+    :r ".\TestData\sec\UserRoles.sql"
+    :r ".\TestData\tkt\Carts.sql"
+    :r ".\TestData\tkt\CartItems.sql"
+    :r ".\TestData\tkt\Orders.sql"
+    :r ".\TestData\tkt\Tickets.sql"
 END
-*/

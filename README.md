@@ -60,11 +60,18 @@ A held seat is locked to the customer for **15 minutes**. Expired holds and fail
 | `POST` | `/events/{eventId}/cart/items` | Hold a seat (requires Bearer token) |
 | `POST` | `/events/{eventId}/orders` | Complete purchase (requires Bearer token) |
 
+## Database
+
+The SQL schema lives in the `TKTDatabase/` SSDT project (Azure SQL / SQL Server). It defines 20 tables in the `tkt` schema, covering venues, events, seat inventory, orders, tickets, and user roles.
+
+→ **[TKTDatabase documentation](docs/TKTDatabase.md)**
+
 ## Getting Started
 
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- [Visual Studio 2022 with SSDT](https://learn.microsoft.com/en-us/sql/ssdt/download-sql-server-data-tools-ssdt) or [sqlpackage](https://learn.microsoft.com/en-us/sql/tools/sqlpackage/sqlpackage-download) for database deployment
 
 ### Build
 

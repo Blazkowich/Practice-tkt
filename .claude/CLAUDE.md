@@ -97,6 +97,29 @@ dotnet run --project EPM.TKT.WebApi
 dotnet test EPM.TKT.slnx
 ```
 
+## TKTDatabase Conventions
+
+### File naming — no schema prefix in filenames
+
+Schema object files must **not** repeat the schema name in the filename. The schema is conveyed by the folder path alone.
+
+| ✅ Correct | ❌ Wrong |
+|---|---|
+| `Schema Objects\sec\Tables\User.sql` | `Schema Objects\sec\Tables\sec.User.sql` |
+| `Schema Objects\tkt\Indexes\Cart.sql` | `Schema Objects\tkt\Indexes\tkt.Cart.sql` |
+
+This applies to Tables, Indexes, and any future object types (Views, Procedures, etc.).
+
+### One object type per file
+
+- Table files (`Tables\`) contain exactly one `CREATE TABLE` statement — no `GO` + `CREATE INDEX`.
+- Index files (`Indexes\`) contain only `CREATE INDEX` statements for one table. Each statement must be separated by `GO` — SSDT allows only one statement per batch (SQL71006).
+
+### Schemas
+
+- `sec` — security / identity (`User`, `Role`, `UserRole`). Requires an explicit `CREATE SCHEMA [sec]` in `Schema Objects\Schemas\sec.sql`.
+- `tkt` — ticketing domain (all other tables). Auto-registered via `<DefaultSchema>tkt</DefaultSchema>` in the project — no schema file needed.
+
 ## Tech Stack
 
 - **.NET 10** / **ASP.NET Core** Web API

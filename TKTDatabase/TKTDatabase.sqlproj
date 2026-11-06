@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -22,7 +22,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
-    <DefaultSchema>tkt</DefaultSchema>
+    <DefaultSchema>dbo</DefaultSchema>
     <OptionStrict>Off</OptionStrict>
     <OptionCompare>Text</OptionCompare>
     <OptionExplicit>On</OptionExplicit>
@@ -54,7 +54,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -63,17 +62,95 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Schema Objects" />
+    <Folder Include="Schema Objects\Schemas" />
+    <!-- sec schema — security / identity -->
+    <Folder Include="Schema Objects\sec" />
+    <Folder Include="Schema Objects\sec\Tables" />
+    <Folder Include="Schema Objects\sec\Indexes" />
+    <!-- tkt schema — ticketing domain -->
+    <Folder Include="Schema Objects\tkt" />
+    <Folder Include="Schema Objects\tkt\Tables" />
+    <Folder Include="Schema Objects\tkt\Indexes" />
     <Folder Include="Scripts" />
     <Folder Include="Scripts\Post-Deployment" />
-    <Folder Include="Scripts\Pre-Deployment" />
-    <Folder Include="Schema Objects\tkt" />
     <Folder Include="Scripts\Post-Deployment\Reference Data" />
-    <Folder Include="Scripts\Post-Deployment\Test Data" />
-    <Folder Include="Scripts\Post-Deployment\Test Data\tkt" />
+    <Folder Include="Scripts\Post-Deployment\Reference Data\sec" />
     <Folder Include="Scripts\Post-Deployment\Reference Data\tkt" />
+    <Folder Include="Scripts\Post-Deployment\TestData" />
+    <Folder Include="Scripts\Post-Deployment\TestData\sec" />
+    <Folder Include="Scripts\Post-Deployment\TestData\tkt" />
+    <Folder Include="Scripts\Pre-Deployment" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\Post-Deployment\PostDeployment.sql" />
+    <!-- schema definitions -->
+    <Build Include="Schema Objects\Schemas\tkt.sql" />
+    <Build Include="Schema Objects\Schemas\sec.sql" />
+    <!-- sec: lookup -->
+    <Build Include="Schema Objects\sec\Tables\Role.sql" />
+    <!-- sec: identity -->
+    <Build Include="Schema Objects\sec\Tables\User.sql" />
+    <Build Include="Schema Objects\sec\Tables\UserRole.sql" />
+    <!-- sec: indexes -->
+    <Build Include="Schema Objects\sec\Indexes\User.sql" />
+    <Build Include="Schema Objects\sec\Indexes\UserRole.sql" />
+    <!-- tkt: lookup / reference tables -->
+    <!-- tkt: venue manifest -->
+    <!-- tkt: event & pricing -->
+    <!-- tkt: transactional -->
+    <!-- tkt: indexes -->
+    <Build Include="Schema Objects\tkt\Indexes\Section.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\Row.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\VenueSeat.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\Event.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\Offer.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\Price.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\EventSeat.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\Cart.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\CartItem.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\Order.sql" />
+    <Build Include="Schema Objects\tkt\Indexes\Ticket.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Cart.sql" />
+    <Build Include="Schema Objects\tkt\Tables\CartItem.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Event.sql" />
+    <Build Include="Schema Objects\tkt\Tables\EventSeat.sql" />
+    <Build Include="Schema Objects\tkt\Tables\EventStatus.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Offer.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Order.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Price.sql" />
+    <Build Include="Schema Objects\tkt\Tables\PriceCategory.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Row.sql" />
+    <Build Include="Schema Objects\tkt\Tables\SeatState.sql" />
+    <Build Include="Schema Objects\tkt\Tables\SeatType.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Section.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Ticket.sql" />
+    <Build Include="Schema Objects\tkt\Tables\Venue.sql" />
+    <Build Include="Schema Objects\tkt\Tables\VenueSeat.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\Post-Deployment\PostDeployment.sql" />
+    <!-- Reference data — sec -->
+    <None Include="Scripts\Post-Deployment\Reference Data\sec\Role.sql" />
+    <!-- Reference data — tkt -->
+    <None Include="Scripts\Post-Deployment\Reference Data\tkt\SeatType.sql" />
+    <None Include="Scripts\Post-Deployment\Reference Data\tkt\SeatState.sql" />
+    <None Include="Scripts\Post-Deployment\Reference Data\tkt\PriceCategory.sql" />
+    <None Include="Scripts\Post-Deployment\Reference Data\tkt\EventStatus.sql" />
+    <!-- Test data — sec -->
+    <None Include="Scripts\Post-Deployment\TestData\sec\Users.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\sec\UserRoles.sql" />
+    <!-- Test data — tkt -->
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Venues.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Sections.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Rows.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\VenueSeats.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Events.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Offers.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Prices.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\EventSeats.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Carts.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\CartItems.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Orders.sql" />
+    <None Include="Scripts\Post-Deployment\TestData\tkt\Tickets.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="TKTDatabase.refactorlog" />
