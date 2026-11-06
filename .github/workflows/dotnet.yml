@@ -22,11 +22,13 @@ jobs:
       run: dotnet restore EPM.TKT.slnx
 
     - name: Build
-      run: dotnet build EPM.TKT.slnx --no-restore -c Release
+      run: |
+        dotnet build EPM.TKT.WebApi/EPM.TKT.WebApi.csproj --no-restore -c Release
+        dotnet build EPM.TKT.Tests/EPM.TKT.Tests.csproj --no-restore -c Release
 
     - name: Test
       run: >
-        dotnet test EPM.TKT.slnx --no-build -c Release
+        dotnet test EPM.TKT.Tests/EPM.TKT.Tests.csproj --no-build -c Release
         --verbosity normal
         --logger "trx;LogFileName=test-results.trx"
 

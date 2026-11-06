@@ -17,11 +17,12 @@ RUN dotnet restore EPM.TKT.slnx
 # ── 2. build ─────────────────────────────────────────────────────────────────
 FROM restore AS build
 COPY . .
-RUN dotnet build EPM.TKT.slnx --no-restore -c Release
+RUN dotnet build EPM.TKT.WebApi/EPM.TKT.WebApi.csproj --no-restore -c Release && \
+    dotnet build EPM.TKT.Tests/EPM.TKT.Tests.csproj --no-restore -c Release
 
 # ── 3. test ──────────────────────────────────────────────────────────────────
 FROM build AS test
-RUN dotnet test EPM.TKT.slnx --no-build -c Release \
+RUN dotnet test EPM.TKT.Tests/EPM.TKT.Tests.csproj --no-build -c Release \
     --logger "console;verbosity=minimal"
 
 # ── 4. publish ───────────────────────────────────────────────────────────────

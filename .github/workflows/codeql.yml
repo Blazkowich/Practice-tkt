@@ -29,8 +29,11 @@ jobs:
       with:
         dotnet-version: 10.0.x
 
+    - name: Restore dependencies
+      run: dotnet restore EPM.TKT.slnx
+
     - name: Build for CodeQL
-      run: dotnet build EPM.TKT.slnx -c Release
+      run: dotnet build EPM.TKT.WebApi/EPM.TKT.WebApi.csproj --no-restore -c Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
