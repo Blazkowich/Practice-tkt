@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build*)",
+      "Bash(dotnet run*)",
+      "Bash(dotnet test*)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git show*)",
+      "Bash(git branch*)",
+      "PowerShell(Get-ChildItem*)",
+      "PowerShell(ls*)"
+    ]
+  },
+  "hooks": {
+   
+  }
+}
