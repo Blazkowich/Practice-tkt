@@ -16,7 +16,7 @@ An online event ticketing system built with .NET 10 / ASP.NET Core Web API. Cust
 | `EPM.TKT.Mediator` | Cross-cutting | MediatR pipeline behaviours (validation, logging) |
 | `EPM.TKT.Tests` | Tests | Unit and integration tests |
 
-Solution file: `EPM.TKT.WebApi.slnx` (root)
+Solution file: `EPM.TKT.slnx` (root)
 
 ## Domain Vocabulary
 
@@ -88,13 +88,13 @@ Two client types (Web UI / Admin UI) communicate via REST/HTTPS with the Backend
 
 ```bash
 # restore & build
-dotnet build EPM.TKT.WebApi.slnx
+dotnet build EPM.TKT.slnx
 
 # run web API
 dotnet run --project EPM.TKT.WebApi
 
 # run tests
-dotnet test EPM.TKT.WebApi.slnx
+dotnet test EPM.TKT.slnx
 ```
 
 ## Tech Stack

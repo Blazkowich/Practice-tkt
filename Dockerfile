@@ -10,6 +10,7 @@ COPY EPM.TKT.External/EPM.TKT.External.csproj         EPM.TKT.External/
 COPY EPM.TKT.Mediator/EPM.TKT.Mediator.csproj         EPM.TKT.Mediator/
 COPY EPM.TKT.WebApi/EPM.TKT.WebApi.csproj             EPM.TKT.WebApi/
 COPY EPM.TKT.Tests/EPM.TKT.Tests.csproj               EPM.TKT.Tests/
+COPY TKTDatabase/TKTDatabase.sqlproj                   TKTDatabase/
 
 RUN dotnet restore EPM.TKT.slnx
 
