@@ -1,7 +1,6 @@
 using EPM.TKT.App.Repositories;
 using EPM.TKT.App.Services;
 using EPM.TKT.Infrastructure.Context;
-using EPM.TKT.Infrastructure.Context.Interfaces;
 using EPM.TKT.Infrastructure.Options;
 using EPM.TKT.Infrastructure.Repositories;
 using EPM.TKT.Infrastructure.Services;
@@ -13,15 +12,15 @@ namespace EPM.TKT.Infrastructure.DependencyInjections;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection RegisterInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
+        this IServiceCollection services)
     {
-        // Connection strings options — binds "ConnectionStrings" section from appsettings
-        services.Configure<ConnectionStringsOptions>(opt =>
-        {
-            foreach (var entry in configuration.GetSection("ConnectionStrings").GetChildren())
-                opt.ConnectionStrings[entry.Key] = entry.Value ?? string.Empty;
-        });
+        services
+            .AddOptions<ConnectionStringsOptions>()
+            .Configure<IConfiguration>((opt, config) =>
+            {
+                foreach (var entry in config.GetSection("ConnectionStrings").GetChildren())
+                    opt.ConnectionStrings[entry.Key] = entry.Value ?? string.Empty;
+            });
 
         // DbContext factory / provider chain
         services.AddTransient<IDbContextFactory, DbContextFactory>();

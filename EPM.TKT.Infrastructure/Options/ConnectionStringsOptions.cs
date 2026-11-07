@@ -1,6 +1,6 @@
-﻿namespace EPM.TKT.Infrastructure.Options;
+namespace EPM.TKT.Infrastructure.Options;
 
-public class ConnectionStringsOptions
+public sealed class ConnectionStringsOptions
 {
-    public IDictionary<string, string> ConnectionStrings { get; set; } = null!;
+    public IDictionary<string, string> ConnectionStrings { get; set; } = new Dictionary<string, string>();
 }

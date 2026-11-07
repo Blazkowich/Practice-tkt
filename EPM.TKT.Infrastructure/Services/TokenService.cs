@@ -66,7 +66,7 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
 
     public Guid? ValidatePasswordResetToken(string token)
     {
-        var handler = new JwtSecurityTokenHandler();
+        var handler = new JwtSecurityTokenHandler { MapInboundClaims = false };
         try
         {
             var principal = handler.ValidateToken(token, new TokenValidationParameters
