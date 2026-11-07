@@ -1,6 +1,4 @@
-﻿using EPM.TKT.Infrastructure.Context.Interfaces;
-
-namespace EPM.TKT.Infrastructure.Context;
+﻿namespace EPM.TKT.Infrastructure.Context;
 
 internal class DbContextProvider(
     IDbContextFactory dbContextFactory) : IDbContextProvider

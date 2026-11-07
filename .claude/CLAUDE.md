@@ -97,6 +97,33 @@ dotnet run --project EPM.TKT.WebApi
 dotnet test EPM.TKT.slnx
 ```
 
+## WebApi Conventions
+
+### XML documentation on every endpoint
+
+Every controller action **must** have XML doc comments. These feed directly into the OpenAPI spec displayed in Scalar.
+
+```csharp
+/// <summary>One-line description of what this endpoint does.</summary>
+/// <remarks>Optional longer explanation, caveats, or usage notes.</remarks>
+/// <param name="request">Brief description of the request body.</param>
+/// <param name="ct">Cancellation token.</param>
+/// <returns>What is returned on success.</returns>
+/// <response code="200">What 200 means in this context.</response>
+/// <response code="400">When and why 400 is returned.</response>
+[HttpPost("my-endpoint")]
+[ProducesResponseType(typeof(MyResponse), StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+public async Task<IActionResult> MyEndpoint([FromBody] MyRequest request, CancellationToken ct)
+```
+
+Rules:
+- `<summary>` — required on every action and every controller class.
+- `<response>` — one tag per `[ProducesResponseType]` attribute; must match the status code.
+- `<remarks>` — use for security notes, side-effects, or anything a caller needs to know that doesn't fit in the summary.
+- `<param>` — required for every parameter except `CancellationToken`.
+- XML doc generation is enabled via `<GenerateDocumentationFile>true</GenerateDocumentationFile>` in `EPM.TKT.WebApi.csproj`. The file is loaded into `AddOpenApi` in `Program.cs`.
+
 ## TKTDatabase Conventions
 
 ### File naming — no schema prefix in filenames

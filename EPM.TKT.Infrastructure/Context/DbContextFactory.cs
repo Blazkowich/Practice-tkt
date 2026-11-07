@@ -1,4 +1,3 @@
-using EPM.TKT.Infrastructure.Context.Interfaces;
 using EPM.TKT.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
