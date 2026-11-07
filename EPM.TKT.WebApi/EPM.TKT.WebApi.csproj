@@ -9,9 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.24.2-preview.1" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EPM.TKT.App\EPM.TKT.App.csproj" />
+    <ProjectReference Include="..\EPM.TKT.Domain\EPM.TKT.Domain.csproj" />
+    <ProjectReference Include="..\EPM.TKT.Infrastructure\EPM.TKT.Infrastructure.csproj" />
+    <ProjectReference Include="..\EPM.TKT.Mediator\EPM.TKT.Mediator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

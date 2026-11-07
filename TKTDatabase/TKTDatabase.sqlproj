@@ -90,9 +90,11 @@
     <!-- sec: identity -->
     <Build Include="Schema Objects\sec\Tables\User.sql" />
     <Build Include="Schema Objects\sec\Tables\UserRole.sql" />
+    <Build Include="Schema Objects\sec\Tables\RefreshToken.sql" />
     <!-- sec: indexes -->
     <Build Include="Schema Objects\sec\Indexes\User.sql" />
     <Build Include="Schema Objects\sec\Indexes\UserRole.sql" />
+    <Build Include="Schema Objects\sec\Indexes\RefreshToken.sql" />
     <!-- tkt: lookup / reference tables -->
     <!-- tkt: venue manifest -->
     <!-- tkt: event & pricing -->
