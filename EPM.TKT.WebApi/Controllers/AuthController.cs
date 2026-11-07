@@ -1,4 +1,4 @@
-using EPM.TKT.App.UseCases.Auth.Commands;
+using EPM.TKT.App.UseCases.Auth;
 using EPM.TKT.Domain.Common;
 using EPM.TKT.Domain.Models.Auth;
 using EPM.TKT.Mediator.Abstractions;

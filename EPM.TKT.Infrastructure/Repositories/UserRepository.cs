@@ -1,5 +1,6 @@
 using EPM.TKT.App.Models.Auth;
 using EPM.TKT.App.Repositories;
+using EPM.TKT.Infrastructure.Entities.Mappings.Sec;
 using EPM.TKT.Infrastructure.Entities.Sec;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,34 +15,14 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
         => await context.Users
             .AsNoTracking()
             .Where(u => u.Email == email)
-            .Select(u => new UserAuthInfo
-            {
-                UserId       = u.UserId,
-                Email        = u.Email,
-                PasswordHash = u.PasswordHash,
-                IsActive     = u.IsActive,
-                Roles        = context.UserRoles
-                    .Where(ur => ur.UserId == u.UserId)
-                    .Select(ur => ur.Role!.Name)
-                    .ToList()
-            })
+            .MapToAuthInfo(context.UserRoles, context.Roles)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<UserAuthInfo?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
         => await context.Users
             .AsNoTracking()
             .Where(u => u.UserId == userId)
-            .Select(u => new UserAuthInfo
-            {
-                UserId       = u.UserId,
-                Email        = u.Email,
-                PasswordHash = u.PasswordHash,
-                IsActive     = u.IsActive,
-                Roles        = context.UserRoles
-                    .Where(ur => ur.UserId == u.UserId)
-                    .Select(ur => ur.Role!.Name)
-                    .ToList()
-            })
+            .MapToAuthInfo(context.UserRoles, context.Roles)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<Guid> CreateUserAsync(string email, string passwordHash, string? firstName, string? lastName, CancellationToken cancellationToken = default)

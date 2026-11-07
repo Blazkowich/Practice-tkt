@@ -1,6 +1,7 @@
 using EPM.TKT.App.Repositories;
 using EPM.TKT.App.Services;
 using EPM.TKT.Infrastructure.Context;
+using EPM.TKT.Infrastructure.Context.Interfaces;
 using EPM.TKT.Infrastructure.Options;
 using EPM.TKT.Infrastructure.Repositories;
 using EPM.TKT.Infrastructure.Services;
@@ -29,6 +30,10 @@ public static class ServiceCollectionExtensions
 
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IVenueRepository, VenueRepository>();
+        services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<IPaymentRepository, PaymentRepository>();
 
         // Services
         services.AddSingleton<IPasswordService, PasswordService>();

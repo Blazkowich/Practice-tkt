@@ -1,4 +1,5 @@
 using System.Text;
+using EPM.TKT.External;
 using EPM.TKT.Infrastructure.DependencyInjections;
 using EPM.TKT.Mediator.DependencyInjection;
 using EPM.TKT.App;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+builder.Services.RegisterExternal();
 builder.Services.RegisterInfrastructure();
 builder.Services.AddMediator<AppAssemblyMarker>();
 

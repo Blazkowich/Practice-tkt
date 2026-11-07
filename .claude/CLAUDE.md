@@ -97,6 +97,31 @@ dotnet run --project EPM.TKT.WebApi
 dotnet test EPM.TKT.slnx
 ```
 
+## App Layer Conventions
+
+### Command/Query and Handler in one file
+
+Each use case lives in a **single file**. The request type (command or query record) and its handler class are co-located.
+
+- File name matches the request type: `RegisterCommand.cs`, `GetVenuesQuery.cs`
+- Namespace: `EPM.TKT.App.UseCases.[Domain]` — no `Commands/`, `Handlers/`, or `Queries/` subdirectories
+- File order: `public sealed record` first, then `internal sealed class` handler
+
+```csharp
+// RegisterCommand.cs
+namespace EPM.TKT.App.UseCases.Auth;
+
+public sealed record RegisterCommand(string Email, string Password) : IRequest<Result<AuthResult>>;
+
+internal sealed class RegisterHandler(...) : IRequestHandler<RegisterCommand, Result<AuthResult>>
+{
+    public async Task<Result<AuthResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    {
+        ...
+    }
+}
+```
+
 ## WebApi Conventions
 
 ### XML documentation on every endpoint

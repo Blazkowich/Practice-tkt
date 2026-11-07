@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EPM.TKT.App\EPM.TKT.App.csproj" />
     <ProjectReference Include="..\EPM.TKT.Domain\EPM.TKT.Domain.csproj" />
+    <ProjectReference Include="..\EPM.TKT.External\EPM.TKT.External.csproj" />
   </ItemGroup>
 
 </Project>
