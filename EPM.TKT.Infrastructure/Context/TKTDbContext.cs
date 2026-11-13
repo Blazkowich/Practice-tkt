@@ -1,3 +1,4 @@
+using System.Reflection;
 using EPM.TKT.Infrastructure.Entities.Sec;
 using EPM.TKT.Infrastructure.Entities.Tkt;
 using Microsoft.EntityFrameworkCore;
@@ -45,8 +46,6 @@ internal class TKTDbContext(DbContextOptions<TKTDbContext> options) : DbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<UserRole>()
-            .HasKey(ur => new { ur.UserId, ur.RoleId });
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
