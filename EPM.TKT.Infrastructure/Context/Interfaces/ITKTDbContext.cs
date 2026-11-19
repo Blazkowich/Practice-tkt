@@ -10,7 +10,6 @@ internal interface ITKTDbContext
     DbSet<Role> Roles { get; set; }
     DbSet<User> Users { get; set; }
     DbSet<UserRole> UserRoles { get; set; }
-    DbSet<RefreshToken> RefreshTokens { get; set; }
 
     // tkt — lookup / reference
     DbSet<SeatType> SeatTypes { get; set; }

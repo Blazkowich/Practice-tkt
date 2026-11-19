@@ -14,20 +14,16 @@ internal sealed class RefreshTokenHandler(
 {
     public async Task<Result<AuthResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        var stored = await users.GetRefreshTokenAsync(request.RefreshToken, cancellationToken);
-
-        if (stored is null || stored.IsRevoked || stored.ExpiresAt < DateTime.UtcNow)
+        var userId = tokens.ValidateRefreshToken(request.RefreshToken);
+        if (userId is null)
             return Result<AuthResult>.Fail("Refresh token is invalid or expired.", ErrorType.Unauthorized);
 
-        var user = await users.GetByIdAsync(stored.UserId, cancellationToken);
+        var user = await users.GetByIdAsync(userId.Value, cancellationToken);
         if (user is null || !user.IsActive)
             return Result<AuthResult>.Fail("User not found or inactive.", ErrorType.Unauthorized);
 
-        await users.RevokeRefreshTokenAsync(request.RefreshToken, cancellationToken);
-
         var accessToken     = tokens.GenerateAccessToken(user.UserId, user.Email, user.Roles);
-        var newRefreshToken = tokens.GenerateRefreshToken();
-        await users.SaveRefreshTokenAsync(user.UserId, newRefreshToken, tokens.GetRefreshTokenExpiry(), cancellationToken);
+        var newRefreshToken = tokens.GenerateRefreshToken(user.UserId);
 
         return Result<AuthResult>.Ok(new AuthResult
         {

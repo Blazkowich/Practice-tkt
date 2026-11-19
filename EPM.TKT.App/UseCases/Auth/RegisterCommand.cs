@@ -28,8 +28,7 @@ internal sealed class RegisterHandler(
 
         var userInfo     = await users.GetByIdAsync(userId, cancellationToken);
         var accessToken  = tokens.GenerateAccessToken(userId, request.Email, userInfo!.Roles);
-        var refreshToken = tokens.GenerateRefreshToken();
-        await users.SaveRefreshTokenAsync(userId, refreshToken, tokens.GetRefreshTokenExpiry(), cancellationToken);
+        var refreshToken = tokens.GenerateRefreshToken(userId);
 
         return Result<AuthResult>.Ok(new AuthResult
         {

@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using EPM.TKT.App.Services;
 using Microsoft.Extensions.Configuration;
@@ -42,8 +41,47 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
         return handler.WriteToken(handler.CreateToken(descriptor));
     }
 
-    public string GenerateRefreshToken()
-        => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+    public string GenerateRefreshToken(Guid userId)
+    {
+        var descriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim("purpose", "refresh"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            }),
+            Expires            = DateTime.UtcNow.AddDays(_refreshDays),
+            Issuer             = _issuer,
+            Audience           = _audience,
+            SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
+        };
+        var handler = new JwtSecurityTokenHandler();
+        return handler.WriteToken(handler.CreateToken(descriptor));
+    }
+
+    public Guid? ValidateRefreshToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler { MapInboundClaims = false };
+        try
+        {
+            var principal = handler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey        = Key,
+                ValidIssuer             = _issuer,
+                ValidAudience           = _audience,
+                ValidateLifetime        = true,
+                ClockSkew               = TimeSpan.Zero
+            }, out _);
+
+            if (principal.FindFirst("purpose")?.Value != "refresh") return null;
+
+            var sub = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            return Guid.TryParse(sub, out var id) ? id : null;
+        }
+        catch { return null; }
+    }
 
     public string GeneratePasswordResetToken(Guid userId)
     {
@@ -87,6 +125,5 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
         catch { return null; }
     }
 
-    public DateTime GetAccessTokenExpiry()  => DateTime.UtcNow.AddMinutes(_accessMinutes);
-    public DateTime GetRefreshTokenExpiry() => DateTime.UtcNow.AddDays(_refreshDays);
+    public DateTime GetAccessTokenExpiry() => DateTime.UtcNow.AddMinutes(_accessMinutes);
 }

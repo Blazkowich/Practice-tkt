@@ -22,8 +22,7 @@ internal sealed class LoginHandler(
             return Result<AuthResult>.Fail("Invalid credentials.", ErrorType.Unauthorized);
 
         var accessToken  = tokens.GenerateAccessToken(user.UserId, user.Email, user.Roles);
-        var refreshToken = tokens.GenerateRefreshToken();
-        await users.SaveRefreshTokenAsync(user.UserId, refreshToken, tokens.GetRefreshTokenExpiry(), cancellationToken);
+        var refreshToken = tokens.GenerateRefreshToken(user.UserId);
 
         return Result<AuthResult>.Ok(new AuthResult
         {

@@ -11,7 +11,6 @@ internal class TKTDbContext(DbContextOptions<TKTDbContext> options) : DbContext(
     public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     // tkt — lookup / reference
     public DbSet<SeatType> SeatTypes { get; set; }

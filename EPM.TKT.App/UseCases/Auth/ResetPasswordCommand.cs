@@ -24,7 +24,6 @@ internal sealed class ResetPasswordHandler(
 
         var hash = passwords.Hash(request.NewPassword);
         await users.UpdatePasswordAsync(userId.Value, hash, cancellationToken);
-        await users.RevokeAllRefreshTokensAsync(userId.Value, cancellationToken);
 
         return Result.Ok();
     }
