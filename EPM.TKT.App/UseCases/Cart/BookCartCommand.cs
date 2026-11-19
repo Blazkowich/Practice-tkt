@@ -4,7 +4,7 @@ using EPM.TKT.Mediator.Abstractions;
 
 namespace EPM.TKT.App.UseCases.Cart;
 
-public sealed record BookCartCommand(Guid CartId) : IRequest<Result<Guid>>;
+public sealed record BookCartCommand(Guid CartId, Guid UserId) : IRequest<Result<Guid>>;
 
 internal sealed class BookCartHandler(ICartRepository carts)
     : IRequestHandler<BookCartCommand, Result<Guid>>
@@ -17,7 +17,7 @@ internal sealed class BookCartHandler(ICartRepository carts)
         if (cart.Items.Count == 0)
             return Result<Guid>.Fail("Cart is empty.", ErrorType.Validation);
 
-        var paymentId = await carts.BookAsync(request.CartId, cancellationToken);
+        var paymentId = await carts.BookAsync(request.CartId, request.UserId, cancellationToken);
         return Result<Guid>.Ok(paymentId);
     }
 }

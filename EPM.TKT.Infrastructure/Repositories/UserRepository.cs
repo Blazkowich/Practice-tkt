@@ -1,5 +1,6 @@
 using EPM.TKT.App.Models.Auth;
 using EPM.TKT.App.Repositories;
+using EPM.TKT.Domain.Models.Auth;
 using EPM.TKT.Infrastructure.Entities.Mappings.Sec;
 using EPM.TKT.Infrastructure.Entities.Sec;
 using Microsoft.EntityFrameworkCore;
@@ -46,4 +47,16 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
         => await context.Users
             .Where(u => u.UserId == userId)
             .ExecuteUpdateAsync(s => s.SetProperty(u => u.PasswordHash, passwordHash), cancellationToken);
+
+    public async Task<IReadOnlyList<UserModel>> GetAllAsync(CancellationToken cancellationToken = default)
+        => await context.Users
+            .AsNoTracking()
+            .OrderBy(u => u.Email)
+            .MapToUserModel()
+            .ToListAsync(cancellationToken);
+
+    public async Task DeactivateAsync(Guid userId, CancellationToken cancellationToken = default)
+        => await context.Users
+            .Where(u => u.UserId == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.IsActive, false), cancellationToken);
 }

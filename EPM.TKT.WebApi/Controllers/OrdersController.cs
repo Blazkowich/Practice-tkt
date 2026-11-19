@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using EPM.TKT.App.UseCases.Cart;
 using EPM.TKT.Domain.Common;
 using EPM.TKT.Domain.Models.Cart;
 using EPM.TKT.Mediator.Abstractions;
 using EPM.TKT.WebApi.Contracts.Orders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EPM.TKT.WebApi.Controllers;
@@ -36,16 +38,21 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     /// <returns>Updated cart state with total amount.</returns>
     /// <response code="200">Seat added — updated cart returned.</response>
     /// <response code="400">Seat or price not found.</response>
+    /// <response code="401">Bearer token is missing or invalid.</response>
+    [Authorize]
     [HttpPost("carts/{cartId:guid}")]
     [EndpointSummary("Add a seat to the cart")]
-    [EndpointDescription("Adds the specified seat to the cart, creating the cart if it does not exist. Returns the full cart state.")]
+    [EndpointDescription("Adds the specified seat to the cart, creating the cart if it does not exist. Returns the full cart state. Requires authentication.")]
     [ProducesResponseType(typeof(CartHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> AddToCart(
         Guid cartId, [FromBody] AddToCartHttpRequest request, CancellationToken ct)
     {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+
         var result = await sender.Send(
-            new AddToCartCommand(cartId, request.EventId, request.SeatId, request.PriceId), ct);
+            new AddToCartCommand(cartId, userId, request.EventId, request.SeatId, request.PriceId), ct);
 
         return result.Match(
             onSuccess: cart => Ok(Map(cart)),
@@ -79,17 +86,28 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     /// <returns>Payment identifier used to complete or cancel the booking.</returns>
     /// <response code="200">Seats moved to Booked state — PaymentId returned.</response>
     /// <response code="400">Cart is empty or not found.</response>
+    /// <response code="401">Bearer token is missing or invalid.</response>
+    [Authorize]
     [HttpPut("carts/{cartId:guid}/book")]
     [EndpointSummary("Book all seats in the cart")]
-    [EndpointDescription("Moves every seat in the cart to Booked state, creates an Order, and returns a PaymentId. Use the PaymentId to complete or fail the payment.")]
+    [EndpointDescription("Moves every seat in the cart to Booked state, creates an Order, and returns a PaymentId. Use the PaymentId to complete or fail the payment. Requires authentication.")]
     [ProducesResponseType(typeof(BookHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Book(Guid cartId, CancellationToken ct)
     {
-        var result = await sender.Send(new BookCartCommand(cartId), ct);
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+
+        var result = await sender.Send(new BookCartCommand(cartId, userId), ct);
         return result.Match(
             onSuccess: paymentId => Ok(new BookHttpResponse(paymentId)),
             onFailure: err       => Problem(err));
+    }
+
+    private bool TryGetUserId(out Guid userId)
+    {
+        var value = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Guid.TryParse(value, out userId);
     }
 
     private static CartHttpResponse Map(CartModel c) => new(

@@ -57,7 +57,7 @@ internal sealed class CartRepository(
     }
 
     public async Task<CartModel> AddSeatAsync(
-        Guid cartId, int eventId, int venueSeatId, int priceId, CancellationToken ct = default)
+        Guid cartId, Guid userId, int eventId, int venueSeatId, int priceId, CancellationToken ct = default)
     {
         var cartExists = await context.Carts.AnyAsync(c => c.CartId == cartId, ct);
         if (!cartExists)
@@ -65,7 +65,7 @@ internal sealed class CartRepository(
             context.Carts.Add(new Cart
             {
                 CartId    = cartId,
-                UserId    = Guid.Empty,
+                UserId    = userId,
                 EventId   = eventId,
                 CreatedAt = DateTime.UtcNow
             });
@@ -111,7 +111,7 @@ internal sealed class CartRepository(
             .ExecuteDeleteAsync(ct);
     }
 
-    public async Task<Guid> BookAsync(Guid cartId, CancellationToken ct = default)
+    public async Task<Guid> BookAsync(Guid cartId, Guid userId, CancellationToken ct = default)
     {
         var cart = await context.Carts
             .AsNoTracking()
@@ -140,11 +140,11 @@ internal sealed class CartRepository(
         // Create Order record
         var order = new Order
         {
-            CartId    = cartId,
-            UserId    = Guid.Empty,
-            EventId   = cart.EventId,
+            CartId      = cartId,
+            UserId      = userId,
+            EventId     = cart.EventId,
             TotalAmount = total,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt   = DateTime.UtcNow
         };
         context.Orders.Add(order);
         await context.SaveChangesAsync(ct);

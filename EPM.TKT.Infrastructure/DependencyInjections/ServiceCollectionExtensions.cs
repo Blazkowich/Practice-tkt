@@ -30,9 +30,18 @@ public static class ServiceCollectionExtensions
 
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IVenueRepository, VenueRepository>();
+        services.AddScoped<ISectionRepository, SectionRepository>();
+        services.AddScoped<IRowRepository, RowRepository>();
+        services.AddScoped<IVenueSeatRepository, VenueSeatRepository>();
         services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<IOfferRepository, OfferRepository>();
+        services.AddScoped<IPriceRepository, PriceRepository>();
+        services.AddScoped<IEventSeatRepository, EventSeatRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<ITicketRepository, TicketRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
 
         // Services

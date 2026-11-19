@@ -5,7 +5,7 @@ using EPM.TKT.Mediator.Abstractions;
 
 namespace EPM.TKT.App.UseCases.Cart;
 
-public sealed record AddToCartCommand(Guid CartId, int EventId, int VenueSeatId, int PriceId)
+public sealed record AddToCartCommand(Guid CartId, Guid UserId, int EventId, int VenueSeatId, int PriceId)
     : IRequest<Result<CartModel>>;
 
 internal sealed class AddToCartHandler(ICartRepository carts)
@@ -14,7 +14,7 @@ internal sealed class AddToCartHandler(ICartRepository carts)
     public async Task<Result<CartModel>> Handle(AddToCartCommand request, CancellationToken cancellationToken)
     {
         var cart = await carts.AddSeatAsync(
-            request.CartId, request.EventId, request.VenueSeatId, request.PriceId, cancellationToken);
+            request.CartId, request.UserId, request.EventId, request.VenueSeatId, request.PriceId, cancellationToken);
         return Result<CartModel>.Ok(cart);
     }
 }
