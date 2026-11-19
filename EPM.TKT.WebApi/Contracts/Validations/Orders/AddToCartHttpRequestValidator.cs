@@ -1,6 +1,7 @@
+using EPM.TKT.WebApi.Contracts.Requests.Orders;
 using FluentValidation;
 
-namespace EPM.TKT.WebApi.Contracts.Orders;
+namespace EPM.TKT.WebApi.Contracts.Validations.Orders;
 
 public sealed class AddToCartHttpRequestValidator : AbstractValidator<AddToCartHttpRequest>
 {

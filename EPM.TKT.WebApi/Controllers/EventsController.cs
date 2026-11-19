@@ -2,7 +2,7 @@ using EPM.TKT.App.UseCases.Event;
 using EPM.TKT.Domain.Common;
 using EPM.TKT.Domain.Models.Event;
 using EPM.TKT.Mediator.Abstractions;
-using EPM.TKT.WebApi.Contracts.Events;
+using EPM.TKT.WebApi.Contracts.Responses.Events;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EPM.TKT.WebApi.Controllers;

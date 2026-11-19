@@ -1,4 +1,4 @@
-namespace EPM.TKT.WebApi.Contracts.Events;
+namespace EPM.TKT.WebApi.Contracts.Responses.Events;
 
 public sealed record EventHttpResponse(
     int       EventId,

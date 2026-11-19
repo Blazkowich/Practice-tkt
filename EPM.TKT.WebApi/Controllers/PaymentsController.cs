@@ -1,7 +1,7 @@
 using EPM.TKT.App.UseCases.Payment;
 using EPM.TKT.Domain.Common;
 using EPM.TKT.Mediator.Abstractions;
-using EPM.TKT.WebApi.Contracts.Payments;
+using EPM.TKT.WebApi.Contracts.Responses.Payments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EPM.TKT.WebApi.Controllers;

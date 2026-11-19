@@ -2,7 +2,7 @@ using EPM.TKT.App.UseCases.Venue;
 using EPM.TKT.Domain.Common;
 using EPM.TKT.Domain.Models.Venue;
 using EPM.TKT.Mediator.Abstractions;
-using EPM.TKT.WebApi.Contracts.Venues;
+using EPM.TKT.WebApi.Contracts.Responses.Venues;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EPM.TKT.WebApi.Controllers;

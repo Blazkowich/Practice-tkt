@@ -3,7 +3,8 @@ using EPM.TKT.App.UseCases.Cart;
 using EPM.TKT.Domain.Common;
 using EPM.TKT.Domain.Models.Cart;
 using EPM.TKT.Mediator.Abstractions;
-using EPM.TKT.WebApi.Contracts.Orders;
+using EPM.TKT.WebApi.Contracts.Requests.Orders;
+using EPM.TKT.WebApi.Contracts.Responses.Orders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

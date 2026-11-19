@@ -2,7 +2,8 @@ using EPM.TKT.App.UseCases.Auth;
 using EPM.TKT.Domain.Common;
 using EPM.TKT.Domain.Models.Auth;
 using EPM.TKT.Mediator.Abstractions;
-using EPM.TKT.WebApi.Contracts.Auth;
+using EPM.TKT.WebApi.Contracts.Requests.Auth;
+using EPM.TKT.WebApi.Contracts.Responses.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

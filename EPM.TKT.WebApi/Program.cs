@@ -3,7 +3,7 @@ using EPM.TKT.External;
 using EPM.TKT.Infrastructure.DependencyInjections;
 using EPM.TKT.Mediator.DependencyInjection;
 using EPM.TKT.App;
-using EPM.TKT.WebApi.Contracts.Auth;
+using EPM.TKT.WebApi.Contracts.Requests.Auth;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

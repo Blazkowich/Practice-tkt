@@ -1,6 +1,7 @@
+using EPM.TKT.WebApi.Contracts.Requests.Auth;
 using FluentValidation;
 
-namespace EPM.TKT.WebApi.Contracts.Auth;
+namespace EPM.TKT.WebApi.Contracts.Validations.Auth;
 
 public sealed class ResetPasswordHttpRequestValidator : AbstractValidator<ResetPasswordHttpRequest>
 {
