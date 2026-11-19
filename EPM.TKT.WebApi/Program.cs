@@ -3,6 +3,9 @@ using EPM.TKT.External;
 using EPM.TKT.Infrastructure.DependencyInjections;
 using EPM.TKT.Mediator.DependencyInjection;
 using EPM.TKT.App;
+using EPM.TKT.WebApi.Contracts.Auth;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -10,6 +13,8 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterHttpRequest>();
 builder.Services.AddOpenApi();
 
 builder.Services.RegisterExternal();
