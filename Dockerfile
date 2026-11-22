@@ -10,7 +10,7 @@ COPY Infrastructure/EPM.TKT.Infrastructure/EPM.TKT.Infrastructure.csproj     Inf
 COPY Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj                       Presentation/EPM.TKT.WebApi/
 COPY Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj                          Tests/EPM.TKT.AppTests/
 COPY Tests/EPM.TKT.Infrastructure/EPM.TKT.Infrastructure.csproj              Tests/EPM.TKT.InfrastructureTests/
-COPY Tests/EPM.TKT.Architecture/EPM.TKT.Architecture.csproj              Tests/EPM.TKT.ArchitectureTests/
+COPY Tests/EPM.TKT.ArchitectureTests/EPM.TKT.ArchitectureTests.csproj        Tests/EPM.TKT.ArchitectureTests/
 COPY Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj                Tests/EPM.TKT.ExternalTests/
 COPY Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj                Tests/EPM.TKT.MediatorTests/
 COPY Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                    Tests/EPM.TKT.WebAPITests/
