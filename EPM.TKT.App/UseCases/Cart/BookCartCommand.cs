@@ -15,7 +15,7 @@ internal sealed class BookCartHandler(ICartRepository carts)
         if (cart is null)
             return Result<Guid>.Fail("Cart not found.", ErrorType.NotFound);
         if (cart.Items.Count == 0)
-            return Result<Guid>.Fail("Cart is empty.", ErrorType.Validation);
+            return Result<Guid>.Fail("Cart is empty.", ErrorType.BadRequest);
 
         var paymentId = await carts.BookAsync(request.CartId, request.UserId, cancellationToken);
         return Result<Guid>.Ok(paymentId);

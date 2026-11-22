@@ -2,13 +2,13 @@ namespace EPM.TKT.Domain.Common;
 
 public enum ErrorType
 {
-    Validation,   // → 400 Bad Request
+    BadRequest,   // → 400 Bad Request
     Unauthorized, // → 401 Unauthorized
     NotFound,     // → 404 Not Found
     Conflict,     // → 409 Conflict
 }
 
-public sealed record Error(string Message, ErrorType Type = ErrorType.Validation);
+public sealed record Error(string Message, ErrorType Type = ErrorType.BadRequest);
 
 /// <summary>Use for operations that return a value or a business-rule failure.</summary>
 public sealed class Result<T>
@@ -27,7 +27,7 @@ public sealed class Result<T>
 
     public static Result<T> Ok(T value) => new(value);
     public static Result<T> Fail(Error e) => new(e);
-    public static Result<T> Fail(string message, ErrorType type = ErrorType.Validation)
+    public static Result<T> Fail(string message, ErrorType type = ErrorType.BadRequest)
         => new(new Error(message, type));
 
     public TOut Match<TOut>(Func<T, TOut> onSuccess, Func<Error, TOut> onFailure)
@@ -49,7 +49,7 @@ public sealed class Result
 
     public static Result Ok() => new();
     public static Result Fail(Error e) => new(e);
-    public static Result Fail(string message, ErrorType type = ErrorType.Validation)
+    public static Result Fail(string message, ErrorType type = ErrorType.BadRequest)
         => new(new Error(message, type));
 
     public TOut Match<TOut>(Func<TOut> onSuccess, Func<Error, TOut> onFailure)
