@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\EPM.TKT.Mediator\EPM.TKT.Mediator.csproj" />
+    <ProjectReference Include="..\..\Core\EPM.TKT.Mediator\EPM.TKT.Mediator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
