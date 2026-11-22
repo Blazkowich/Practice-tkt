@@ -10,6 +10,7 @@ COPY Infrastructure/EPM.TKT.Infrastructure/EPM.TKT.Infrastructure.csproj     Inf
 COPY Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj                       Presentation/EPM.TKT.WebApi/
 COPY Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj                          Tests/EPM.TKT.AppTests/
 COPY Tests/EPM.TKT.Infrastructure/EPM.TKT.Infrastructure.csproj              Tests/EPM.TKT.InfrastructureTests/
+COPY Tests/EPM.TKT.Architecture/EPM.TKT.Architecture.csproj              Tests/EPM.TKT.ArchitectureTests/
 COPY Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj                Tests/EPM.TKT.ExternalTests/
 COPY Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj                Tests/EPM.TKT.MediatorTests/
 COPY Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                    Tests/EPM.TKT.WebAPITests/
@@ -17,6 +18,7 @@ COPY Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                    Tes
 RUN dotnet restore Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj && \
     dotnet restore Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj && \
     dotnet restore Tests/EPM.TKT.InfrastructureTests/EPM.TKT.InfrastructureTests.csproj && \
+    dotnet restore Tests/EPM.TKT.ArchitectureTests/EPM.TKT.ArchitectureTests.csproj && \
     dotnet restore Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj && \
     dotnet restore Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj && \
     dotnet restore Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj
@@ -27,14 +29,16 @@ COPY . .
 RUN dotnet build Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj                      --no-restore -c Release && \
     dotnet build Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj                         --no-restore -c Release && \
     dotnet build Tests/EPM.TKT.InfrastructureTests/EPM.TKT.InfrastructureTests.csproj   --no-restore -c Release && \
+    dotnet build Tests/EPM.TKT.ArchitectureTests/EPM.TKT.ArchitectureTests.csproj       --no-restore -c Release && \
     dotnet build Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj               --no-restore -c Release && \
     dotnet build Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj               --no-restore -c Release && \
     dotnet build Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                   --no-restore -c Release
-
+        
 # ── 3. test ──────────────────────────────────────────────────────────────────
 FROM build AS test
 RUN dotnet test Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj                          --no-build -c Release --logger "console;verbosity=minimal" && \
-RUN dotnet test Tests/EPM.TKT.InfrastructureTests/EPM.TKT.InfrastructureTests.csproj    --no-build -c Release --logger "console;verbosity=minimal" && \
+    dotnet test Tests/EPM.TKT.InfrastructureTests/EPM.TKT.InfrastructureTests.csproj    --no-build -c Release --logger "console;verbosity=minimal" && \
+    dotnet test Tests/EPM.TKT.ArchitectureTests/EPM.TKT.ArchitectureTests.csproj        --no-build -c Release --logger "console;verbosity=minimal" && \
     dotnet test Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj                --no-build -c Release --logger "console;verbosity=minimal" && \
     dotnet test Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj                --no-build -c Release --logger "console;verbosity=minimal" && \
     dotnet test Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                    --no-build -c Release --logger "console;verbosity=minimal"
