@@ -12,7 +12,7 @@ internal sealed class ResetPasswordHandler(
     IPasswordService passwords,
     ITokenService tokens) : IRequestHandler<ResetPasswordCommand, Result>
 {
-    public async Task<Result> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         var userId = tokens.ValidatePasswordResetToken(request.ResetToken);
         if (userId is null)

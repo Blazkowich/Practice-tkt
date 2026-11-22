@@ -11,7 +11,7 @@ public sealed class NamingConventionTests
     public void Controllers_Should_End_With_Controller()
     {
         var result = Types.InAssembly(TestAssemblies.WebApi)
-            .That().ResideInNamespace("EPM.TKT.WebApi.Controllers")
+            .That().ResideInNamespace(ArchitectureConfig.WebApiControllersNs)
             .And().AreClasses()
             .Should().HaveNameEndingWith("Controller")
             .GetResult();
@@ -25,7 +25,7 @@ public sealed class NamingConventionTests
     public void Handlers_Should_End_With_Handler()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .That().ResideInNamespace("EPM.TKT.App.UseCases")
+            .That().ResideInNamespace(ArchitectureConfig.AppUseCasesNs)
             .And().AreClasses()
             .And().HaveNameEndingWith("Handler")
             .Should().HaveNameEndingWith("Handler")
@@ -38,7 +38,7 @@ public sealed class NamingConventionTests
     public void Commands_Should_End_With_Command()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .That().ResideInNamespace("EPM.TKT.App.UseCases")
+            .That().ResideInNamespace(ArchitectureConfig.AppUseCasesNs)
             .And().AreClasses()
             .And().HaveNameEndingWith("Command")
             .Should().HaveNameEndingWith("Command")
@@ -51,7 +51,7 @@ public sealed class NamingConventionTests
     public void Queries_Should_End_With_Query()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .That().ResideInNamespace("EPM.TKT.App.UseCases")
+            .That().ResideInNamespace(ArchitectureConfig.AppUseCasesNs)
             .And().AreClasses()
             .And().HaveNameEndingWith("Query")
             .Should().HaveNameEndingWith("Query")
@@ -66,7 +66,7 @@ public sealed class NamingConventionTests
     public void Repository_Implementations_Should_End_With_Repository()
     {
         var result = Types.InAssembly(TestAssemblies.Infrastructure)
-            .That().ResideInNamespace("EPM.TKT.Infrastructure.Repositories")
+            .That().ResideInNamespace(ArchitectureConfig.InfraRepositoriesNs)
             .And().AreClasses()
             .Should().HaveNameEndingWith("Repository")
             .GetResult();
@@ -75,10 +75,10 @@ public sealed class NamingConventionTests
     }
 
     [Test]
-    public void Repository_Interfaces_Should_Start_With_I_And_End_With_Repository()
+    public void Repository_Interfaces_Should_Start_With_I()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .That().ResideInNamespace("EPM.TKT.App.Repositories")
+            .That().ResideInNamespace(ArchitectureConfig.AppRepositoriesNs)
             .And().AreInterfaces()
             .Should().HaveNameStartingWith("I")
             .GetResult();

@@ -17,7 +17,7 @@ public sealed class PerformanceTests
         var repositoryTypes = TestAssemblies.Infrastructure
             .GetTypes()
             .Where(t => t.IsClass
-                     && t.Namespace?.StartsWith("EPM.TKT.Infrastructure.Repositories") == true);
+                     && t.Namespace?.StartsWith(ArchitectureConfig.InfraRepositoriesNs) == true);
 
         AssertAsyncNaming(repositoryTypes, "Infrastructure repository");
     }
@@ -30,7 +30,7 @@ public sealed class PerformanceTests
         var handlerTypes = TestAssemblies.App
             .GetTypes()
             .Where(t => t.IsClass
-                     && t.Namespace?.StartsWith("EPM.TKT.App.UseCases") == true
+                     && t.Namespace?.StartsWith(ArchitectureConfig.AppUseCasesNs) == true
                      && t.Name.EndsWith("Handler"));
 
         AssertAsyncNaming(handlerTypes, "App handler");
@@ -44,7 +44,7 @@ public sealed class PerformanceTests
         var controllerTypes = TestAssemblies.WebApi
             .GetTypes()
             .Where(t => t.IsClass
-                     && t.Namespace?.StartsWith("EPM.TKT.WebApi.Controllers") == true
+                     && t.Namespace?.StartsWith(ArchitectureConfig.WebApiControllersNs) == true
                      && t.Name.EndsWith("Controller"));
 
         AssertAsyncNaming(controllerTypes, "WebApi controller");

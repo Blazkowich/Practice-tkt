@@ -6,7 +6,7 @@ namespace EPM.TKT.Mediator.Abstractions;
 public interface IRequestHandler<in TRequest>
     where TRequest : IRequest
 {
-    Task Handle(TRequest request, CancellationToken cancellationToken);
+    Task HandleAsync(TRequest request, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -15,5 +15,5 @@ public interface IRequestHandler<in TRequest>
 public interface IRequestHandler<in TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
+    Task<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken);
 }

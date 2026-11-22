@@ -11,7 +11,7 @@ internal sealed class ForgotPasswordHandler(
     IUserRepository users,
     ITokenService tokens) : IRequestHandler<ForgotPasswordCommand, string?>
 {
-    public async Task<string?> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<string?> HandleAsync(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         var user = await users.GetByEmailAsync(request.Email, cancellationToken);
         if (user is null || !user.IsActive)

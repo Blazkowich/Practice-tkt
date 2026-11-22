@@ -30,10 +30,10 @@ public sealed class VenuesControllerTests
         [
             new() { VenueId = 1, Name = "National Arena", City = "Tbilisi", Country = "Georgia" }
         ];
-        _sender.Setup(s => s.Send(It.IsAny<GetVenuesQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetVenuesQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(venues);
 
-        var result = await _controller.GetAll(default);
+        var result = await _controller.GetAllAsync(default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -41,10 +41,10 @@ public sealed class VenuesControllerTests
     [Test]
     public async Task GetAll_ReturnsOk_WithEmptyList()
     {
-        _sender.Setup(s => s.Send(It.IsAny<GetVenuesQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetVenuesQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync((IReadOnlyList<VenueModel>)[]);
 
-        var result = await _controller.GetAll(default);
+        var result = await _controller.GetAllAsync(default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -58,10 +58,10 @@ public sealed class VenuesControllerTests
         [
             new() { SectionId = 1, Name = "Floor", SeatType = "Reserved" }
         ];
-        _sender.Setup(s => s.Send(It.IsAny<GetVenueSectionsQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetVenueSectionsQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<IReadOnlyList<SectionModel>>.Ok(sections));
 
-        var result = await _controller.GetSections(venueId: 1, default);
+        var result = await _controller.GetSectionsAsync(venueId: 1, default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -69,10 +69,10 @@ public sealed class VenuesControllerTests
     [Test]
     public async Task GetSections_ReturnsNotFound_WhenVenueDoesNotExist()
     {
-        _sender.Setup(s => s.Send(It.IsAny<GetVenueSectionsQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetVenueSectionsQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<IReadOnlyList<SectionModel>>.Fail("Venue not found.", ErrorType.NotFound));
 
-        var result = await _controller.GetSections(venueId: 99, default);
+        var result = await _controller.GetSectionsAsync(venueId: 99, default);
 
         Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
     }

@@ -10,19 +10,13 @@ namespace EPM.TKT.ArchitectureTests;
 [TestFixture]
 public sealed class CyclicDependencyTests
 {
-    private const string DomainNs         = "EPM.TKT.Domain";
-    private const string AppNs            = "EPM.TKT.App";
-    private const string InfrastructureNs = "EPM.TKT.Infrastructure";
-    private const string WebApiNs         = "EPM.TKT.WebApi";
-
     // ── No feedback from App back to Domain ───────────────────────────────────
-    // (Domain → App would create a cycle; Domain must stay pure)
 
     [Test]
     public void Domain_ShouldNot_Reference_App_CreatingCycle()
     {
         var result = Types.InAssembly(TestAssemblies.Domain)
-            .ShouldNot().HaveDependencyOn(AppNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.AppNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True,
@@ -35,7 +29,7 @@ public sealed class CyclicDependencyTests
     public void App_ShouldNot_Reference_Infrastructure_CreatingCycle()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .ShouldNot().HaveDependencyOn(InfrastructureNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.InfrastructureNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True,
@@ -48,7 +42,7 @@ public sealed class CyclicDependencyTests
     public void Infrastructure_ShouldNot_Reference_WebApi_CreatingCycle()
     {
         var result = Types.InAssembly(TestAssemblies.Infrastructure)
-            .ShouldNot().HaveDependencyOn(WebApiNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.WebApiNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True,
@@ -60,10 +54,9 @@ public sealed class CyclicDependencyTests
     [Test]
     public void WebApi_ShouldNot_Reference_Infrastructure_Directly()
     {
-        // WebApi should speak to the App layer only; Infrastructure is wired by DI.
         var result = Types.InAssembly(TestAssemblies.WebApi)
-            .That().ResideInNamespace(WebApiNs + ".Controllers")
-            .ShouldNot().HaveDependencyOn(InfrastructureNs)
+            .That().ResideInNamespace(ArchitectureConfig.WebApiControllersNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.InfrastructureNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True,
@@ -74,8 +67,8 @@ public sealed class CyclicDependencyTests
     public void WebApi_Controllers_ShouldNot_Reference_Domain_Repositories()
     {
         var result = Types.InAssembly(TestAssemblies.WebApi)
-            .That().ResideInNamespace(WebApiNs + ".Controllers")
-            .ShouldNot().HaveDependencyOn(AppNs + ".Repositories")
+            .That().ResideInNamespace(ArchitectureConfig.WebApiControllersNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.AppRepositoriesNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True,

@@ -11,7 +11,7 @@ public sealed record GetEventSectionSeatsQuery(int EventId, int SectionId)
 internal sealed class GetEventSectionSeatsHandler(IEventRepository events)
     : IRequestHandler<GetEventSectionSeatsQuery, Result<IReadOnlyList<SeatAvailabilityModel>>>
 {
-    public async Task<Result<IReadOnlyList<SeatAvailabilityModel>>> Handle(
+    public async Task<Result<IReadOnlyList<SeatAvailabilityModel>>> HandleAsync(
         GetEventSectionSeatsQuery request, CancellationToken cancellationToken)
     {
         var seats = await events.GetSeatsAsync(request.EventId, request.SectionId, cancellationToken);

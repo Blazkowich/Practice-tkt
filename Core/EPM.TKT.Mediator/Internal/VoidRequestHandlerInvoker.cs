@@ -3,15 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EPM.TKT.Mediator.Internal;
 
-internal sealed class VoidRequestHandlerInvoker<TRequest> : IRequestHandlerInvoker
+internal sealed class VoidRequestHandlerInvoker<TRequest>(Type handlerImplementationType) : IRequestHandlerInvoker
     where TRequest : IRequest
 {
-    private readonly Type _handlerImplementationType;
-
-    public VoidRequestHandlerInvoker(Type handlerImplementationType)
-    {
-        _handlerImplementationType = handlerImplementationType;
-    }
+    private readonly Type _handlerImplementationType = handlerImplementationType;
 
     public async Task<object?> InvokeAsync(
         object request,
@@ -19,7 +14,7 @@ internal sealed class VoidRequestHandlerInvoker<TRequest> : IRequestHandlerInvok
         CancellationToken cancellationToken)
     {
         var handler = (IRequestHandler<TRequest>)serviceProvider.GetRequiredService(_handlerImplementationType);
-        await handler.Handle((TRequest)request, cancellationToken).ConfigureAwait(false);
+        await handler.HandleAsync((TRequest)request, cancellationToken).ConfigureAwait(false);
         return null;
     }
 }

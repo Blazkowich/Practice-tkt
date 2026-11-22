@@ -9,6 +9,6 @@ public sealed record GetCartQuery(Guid CartId) : IRequest<CartModel?>;
 internal sealed class GetCartHandler(ICartRepository carts)
     : IRequestHandler<GetCartQuery, CartModel?>
 {
-    public Task<CartModel?> Handle(GetCartQuery request, CancellationToken cancellationToken)
+    public Task<CartModel?> HandleAsync(GetCartQuery request, CancellationToken cancellationToken)
         => carts.GetAsync(request.CartId, cancellationToken);
 }

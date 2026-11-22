@@ -9,6 +9,6 @@ public sealed record GetEventsQuery : IRequest<IReadOnlyList<EventModel>>;
 internal sealed class GetEventsHandler(IEventRepository events)
     : IRequestHandler<GetEventsQuery, IReadOnlyList<EventModel>>
 {
-    public Task<IReadOnlyList<EventModel>> Handle(GetEventsQuery request, CancellationToken cancellationToken)
+    public Task<IReadOnlyList<EventModel>> HandleAsync(GetEventsQuery request, CancellationToken cancellationToken)
         => events.GetAllAsync(cancellationToken);
 }

@@ -11,7 +11,7 @@ public sealed record AddToCartCommand(Guid CartId, Guid UserId, int EventId, int
 internal sealed class AddToCartHandler(ICartRepository carts)
     : IRequestHandler<AddToCartCommand, Result<CartModel>>
 {
-    public async Task<Result<CartModel>> Handle(AddToCartCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CartModel>> HandleAsync(AddToCartCommand request, CancellationToken cancellationToken)
     {
         var cart = await carts.AddSeatAsync(
             request.CartId, request.UserId, request.EventId, request.VenueSeatId, request.PriceId, cancellationToken);

@@ -17,7 +17,9 @@ public sealed class InterfaceTests
     {
         var commandTypes = TestAssemblies.App
             .GetTypes()
-            .Where(t => t.IsClass && t.Name.EndsWith("Command") && t.Namespace?.StartsWith("EPM.TKT.App.UseCases") == true);
+            .Where(t => t.IsClass
+                     && t.Name.EndsWith("Command")
+                     && t.Namespace?.StartsWith(ArchitectureConfig.AppUseCasesNs) == true);
 
         foreach (var type in commandTypes)
         {
@@ -35,7 +37,9 @@ public sealed class InterfaceTests
     {
         var queryTypes = TestAssemblies.App
             .GetTypes()
-            .Where(t => t.IsClass && t.Name.EndsWith("Query") && t.Namespace?.StartsWith("EPM.TKT.App.UseCases") == true);
+            .Where(t => t.IsClass
+                     && t.Name.EndsWith("Query")
+                     && t.Namespace?.StartsWith(ArchitectureConfig.AppUseCasesNs) == true);
 
         foreach (var type in queryTypes)
         {
@@ -52,15 +56,21 @@ public sealed class InterfaceTests
     {
         var handlerTypes = TestAssemblies.App
             .GetTypes()
-            .Where(t => t.IsClass && t.Name.EndsWith("Handler") && t.Namespace?.StartsWith("EPM.TKT.App.UseCases") == true);
+            .Where(t => t.IsClass
+                     && t.Name.EndsWith("Handler")
+                     && t.Namespace?.StartsWith(ArchitectureConfig.AppUseCasesNs) == true);
 
         foreach (var type in handlerTypes)
         {
+            // Accept both the value-returning IRequestHandler<TRequest, TResponse>
+            // and the void IRequestHandler<TRequest> used by fire-and-forget handlers (e.g. LogoutHandler).
             bool implementsHandler = type.GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>));
+                .Any(i => i.IsGenericType &&
+                         (i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>) ||
+                          i.GetGenericTypeDefinition() == typeof(IRequestHandler<>)));
 
             Assert.That(implementsHandler, Is.True,
-                $"'{type.FullName}' ends with 'Handler' but does not implement IRequestHandler<TRequest, TResponse>.");
+                $"'{type.FullName}' ends with 'Handler' but does not implement IRequestHandler<TRequest> or IRequestHandler<TRequest, TResponse>.");
         }
     }
 
@@ -70,7 +80,7 @@ public sealed class InterfaceTests
     public void App_Repository_Contracts_Should_Be_Interfaces()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .That().ResideInNamespace("EPM.TKT.App.Repositories")
+            .That().ResideInNamespace(ArchitectureConfig.AppRepositoriesNs)
             .Should().BeInterfaces()
             .GetResult();
 
@@ -81,7 +91,7 @@ public sealed class InterfaceTests
     public void App_Service_Contracts_Should_Be_Interfaces()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .That().ResideInNamespace("EPM.TKT.App.Services")
+            .That().ResideInNamespace(ArchitectureConfig.AppServicesNs)
             .Should().BeInterfaces()
             .GetResult();
 

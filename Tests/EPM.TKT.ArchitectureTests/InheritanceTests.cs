@@ -16,7 +16,7 @@ public sealed class InheritanceTests
     public void Controllers_Should_Depend_On_AspNetCoreMvc()
     {
         var result = Types.InAssembly(TestAssemblies.WebApi)
-            .That().ResideInNamespace("EPM.TKT.WebApi.Controllers")
+            .That().ResideInNamespace(ArchitectureConfig.WebApiControllersNs)
             .And().HaveNameEndingWith("Controller")
             .Should().HaveDependencyOn("Microsoft.AspNetCore.Mvc")
             .GetResult();
@@ -29,7 +29,7 @@ public sealed class InheritanceTests
     public void Controllers_Should_Be_Sealed()
     {
         var result = Types.InAssembly(TestAssemblies.WebApi)
-            .That().ResideInNamespace("EPM.TKT.WebApi.Controllers")
+            .That().ResideInNamespace(ArchitectureConfig.WebApiControllersNs)
             .And().HaveNameEndingWith("Controller")
             .Should().BeSealed()
             .GetResult();
@@ -67,7 +67,7 @@ public sealed class InheritanceTests
     public void Repository_Implementations_Should_Be_Sealed()
     {
         var result = Types.InAssembly(TestAssemblies.Infrastructure)
-            .That().ResideInNamespace("EPM.TKT.Infrastructure.Repositories")
+            .That().ResideInNamespace(ArchitectureConfig.InfraRepositoriesNs)
             .And().AreClasses()
             .Should().BeSealed()
             .GetResult();

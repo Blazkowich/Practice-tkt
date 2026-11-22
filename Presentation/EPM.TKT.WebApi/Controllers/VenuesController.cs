@@ -20,9 +20,9 @@ public sealed class VenuesController(ISender sender) : ControllerBase
     [EndpointSummary("List all venues")]
     [EndpointDescription("Returns every active venue in the system.")]
     [ProducesResponseType(typeof(IReadOnlyList<VenueHttpResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll(CancellationToken ct)
+    public async Task<IActionResult> GetAllAsync(CancellationToken ct)
     {
-        var venues = await sender.Send(new GetVenuesQuery(), ct);
+        var venues = await sender.SendAsync(new GetVenuesQuery(), ct);
         return Ok(venues.Select(Map));
     }
 
@@ -37,9 +37,9 @@ public sealed class VenuesController(ISender sender) : ControllerBase
     [EndpointDescription("Returns all sections (Reserved or General Admission) belonging to the given venue.")]
     [ProducesResponseType(typeof(IReadOnlyList<SectionHttpResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetSections(int venueId, CancellationToken ct)
+    public async Task<IActionResult> GetSectionsAsync(int venueId, CancellationToken ct)
     {
-        var result = await sender.Send(new GetVenueSectionsQuery(venueId), ct);
+        var result = await sender.SendAsync(new GetVenueSectionsQuery(venueId), ct);
         return result.Match(
             onSuccess: sections => Ok(sections.Select(Map)),
             onFailure: err => Problem(err));

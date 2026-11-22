@@ -60,10 +60,10 @@ public sealed class OrdersControllerTests
     [Test]
     public async Task GetCart_ReturnsOk_WhenCartExists()
     {
-        _sender.Setup(s => s.Send(It.IsAny<GetCartQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetCartQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(FakeCart(_cartId));
 
-        var result = await _controller.GetCart(_cartId, default);
+        var result = await _controller.GetCartAsync(_cartId, default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -71,10 +71,10 @@ public sealed class OrdersControllerTests
     [Test]
     public async Task GetCart_ReturnsNotFound_WhenCartDoesNotExist()
     {
-        _sender.Setup(s => s.Send(It.IsAny<GetCartQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetCartQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync((CartModel?)null);
 
-        var result = await _controller.GetCart(_cartId, default);
+        var result = await _controller.GetCartAsync(_cartId, default);
 
         Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
     }
@@ -85,10 +85,10 @@ public sealed class OrdersControllerTests
     public async Task AddToCart_ReturnsOk_WhenSeatAdded()
     {
         SetAuthenticatedUser();
-        _sender.Setup(s => s.Send(It.IsAny<AddToCartCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<AddToCartCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<CartModel>.Ok(FakeCart(_cartId)));
 
-        var result = await _controller.AddToCart(
+        var result = await _controller.AddToCartAsync(
             _cartId, new AddToCartHttpRequest(EventId: 1, SeatId: 10, PriceId: 2), default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -98,10 +98,10 @@ public sealed class OrdersControllerTests
     public async Task AddToCart_ReturnsBadRequest_WhenSeatUnavailable()
     {
         SetAuthenticatedUser();
-        _sender.Setup(s => s.Send(It.IsAny<AddToCartCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<AddToCartCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<CartModel>.Fail("Seat not available."));
 
-        var result = await _controller.AddToCart(
+        var result = await _controller.AddToCartAsync(
             _cartId, new AddToCartHttpRequest(EventId: 1, SeatId: 10, PriceId: 2), default);
 
         Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -112,7 +112,7 @@ public sealed class OrdersControllerTests
     {
         SetUnauthenticatedUser();
 
-        var result = await _controller.AddToCart(
+        var result = await _controller.AddToCartAsync(
             _cartId, new AddToCartHttpRequest(EventId: 1, SeatId: 10, PriceId: 2), default);
 
         Assert.That(result, Is.InstanceOf<UnauthorizedResult>());
@@ -123,10 +123,10 @@ public sealed class OrdersControllerTests
     [Test]
     public async Task RemoveFromCart_ReturnsNoContent_WhenSuccessful()
     {
-        _sender.Setup(s => s.Send(It.IsAny<RemoveFromCartCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<RemoveFromCartCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result.Ok());
 
-        var result = await _controller.RemoveFromCart(_cartId, eventId: 1, seatId: 10, default);
+        var result = await _controller.RemoveFromCartAsync(_cartId, eventId: 1, seatId: 10, default);
 
         Assert.That(result, Is.InstanceOf<NoContentResult>());
     }
@@ -138,10 +138,10 @@ public sealed class OrdersControllerTests
     {
         SetAuthenticatedUser();
         var paymentId = Guid.NewGuid();
-        _sender.Setup(s => s.Send(It.IsAny<BookCartCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<BookCartCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<Guid>.Ok(paymentId));
 
-        var result = await _controller.Book(_cartId, default);
+        var result = await _controller.BookAsync(_cartId, default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -151,7 +151,7 @@ public sealed class OrdersControllerTests
     {
         SetUnauthenticatedUser();
 
-        var result = await _controller.Book(_cartId, default);
+        var result = await _controller.BookAsync(_cartId, default);
 
         Assert.That(result, Is.InstanceOf<UnauthorizedResult>());
     }
@@ -160,10 +160,10 @@ public sealed class OrdersControllerTests
     public async Task Book_ReturnsBadRequest_WhenCartIsEmpty()
     {
         SetAuthenticatedUser();
-        _sender.Setup(s => s.Send(It.IsAny<BookCartCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<BookCartCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<Guid>.Fail("Cart is empty."));
 
-        var result = await _controller.Book(_cartId, default);
+        var result = await _controller.BookAsync(_cartId, default);
 
         Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
     }

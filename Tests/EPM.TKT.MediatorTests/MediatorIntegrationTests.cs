@@ -19,7 +19,7 @@ public sealed class MediatorIntegrationTests
         using var provider = CreateProviderWithTestAssemblyHandlers();
 
         var sender = provider.GetRequiredService<ISender>();
-        var response = await sender.Send(new EchoRequest("hello"), CancellationToken.None);
+        var response = await sender.SendAsync(new EchoRequest("hello"), CancellationToken.None);
 
         Assert.That(response, Is.EqualTo("hello"));
     }
@@ -30,7 +30,7 @@ public sealed class MediatorIntegrationTests
         using var provider = CreateProviderWithTestAssemblyHandlers();
 
         var sender = provider.GetRequiredService<ISender>();
-        var sum = await sender.Send(new SumRequest(3, 4), CancellationToken.None);
+        var sum = await sender.SendAsync(new SumRequest(3, 4), CancellationToken.None);
 
         Assert.That(sum, Is.EqualTo(7));
     }
@@ -41,8 +41,8 @@ public sealed class MediatorIntegrationTests
         using var provider = CreateProviderWithTestAssemblyHandlers();
 
         var sender = provider.GetRequiredService<ISender>();
-        var alpha = await sender.Send(new AlphaRequest(), CancellationToken.None);
-        var beta = await sender.Send(new BetaRequest(), CancellationToken.None);
+        var alpha = await sender.SendAsync(new AlphaRequest(), CancellationToken.None);
+        var beta = await sender.SendAsync(new BetaRequest(), CancellationToken.None);
 
         using (Assert.EnterMultipleScope())
         {
@@ -57,7 +57,7 @@ public sealed class MediatorIntegrationTests
         using var provider = CreateProviderWithTestAssemblyHandlers();
 
         var sender = provider.GetRequiredService<ISender>();
-        await sender.Send(new LogCommand("x"), CancellationToken.None);
+        await sender.SendAsync(new LogCommand("x"), CancellationToken.None);
 
         Assert.That(LogCommandHandler.InvocationCount, Is.EqualTo(1));
     }
@@ -70,7 +70,7 @@ public sealed class MediatorIntegrationTests
         var sender = provider.GetRequiredService<ISender>();
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await sender.Send(new ExplodingRequest(), CancellationToken.None));
+            await sender.SendAsync(new ExplodingRequest(), CancellationToken.None));
 
         Assert.That(ex!.Message, Is.EqualTo("handler failure"));
     }
@@ -84,7 +84,7 @@ public sealed class MediatorIntegrationTests
         var senderCore = providerCore.GetRequiredService<ISender>();
 
         Assert.ThrowsAsync<HandlerNotRegisteredException>(async () =>
-            await senderCore.Send(new EchoRequest("no"), CancellationToken.None));
+            await senderCore.SendAsync(new EchoRequest("no"), CancellationToken.None));
 
         var servicesWithTests = new ServiceCollection();
         servicesWithTests.AddMediator(typeof(EchoHandler).Assembly);
@@ -93,7 +93,7 @@ public sealed class MediatorIntegrationTests
 
         Assert.DoesNotThrowAsync(async () =>
         {
-            var r = await senderTests.Send(new EchoRequest("yes"), CancellationToken.None);
+            var r = await senderTests.SendAsync(new EchoRequest("yes"), CancellationToken.None);
             Assert.That(r, Is.EqualTo("yes"));
         });
     }
@@ -105,7 +105,7 @@ public sealed class MediatorIntegrationTests
         var sender = provider.GetRequiredService<ISender>();
 
         var ex = Assert.ThrowsAsync<HandlerNotRegisteredException>(async () =>
-            await sender.Send(new UnhandledRequest(), CancellationToken.None));
+            await sender.SendAsync(new UnhandledRequest(), CancellationToken.None));
 
         Assert.That(ex!.RequestType, Is.EqualTo(typeof(UnhandledRequest)));
     }
@@ -120,7 +120,7 @@ public sealed class MediatorIntegrationTests
 
         Assert.DoesNotThrowAsync(async () =>
         {
-            var n = await sender.Send(new SumRequest(1, 2), CancellationToken.None);
+            var n = await sender.SendAsync(new SumRequest(1, 2), CancellationToken.None);
             Assert.That(n, Is.EqualTo(3));
         });
     }

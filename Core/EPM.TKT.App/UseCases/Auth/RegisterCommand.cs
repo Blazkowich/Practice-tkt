@@ -18,7 +18,7 @@ internal sealed class RegisterHandler(
     IPasswordService passwords,
     ITokenService tokens) : IRequestHandler<RegisterCommand, Result<AuthResult>>
 {
-    public async Task<Result<AuthResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthResult>> HandleAsync(RegisterCommand request, CancellationToken cancellationToken)
     {
         if (await users.EmailExistsAsync(request.Email, cancellationToken))
             return Result<AuthResult>.Fail("Email is already registered.", ErrorType.Conflict);

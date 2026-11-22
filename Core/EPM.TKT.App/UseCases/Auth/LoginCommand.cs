@@ -13,7 +13,7 @@ internal sealed class LoginHandler(
     IPasswordService passwords,
     ITokenService tokens) : IRequestHandler<LoginCommand, Result<AuthResult>>
 {
-    public async Task<Result<AuthResult>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthResult>> HandleAsync(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await users.GetByEmailAsync(request.Email, cancellationToken);
 

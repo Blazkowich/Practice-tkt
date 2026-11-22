@@ -9,7 +9,7 @@ public sealed record RemoveFromCartCommand(Guid CartId, int EventId, int VenueSe
 internal sealed class RemoveFromCartHandler(ICartRepository carts)
     : IRequestHandler<RemoveFromCartCommand, Result>
 {
-    public async Task<Result> Handle(RemoveFromCartCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(RemoveFromCartCommand request, CancellationToken cancellationToken)
     {
         await carts.RemoveSeatAsync(request.CartId, request.EventId, request.VenueSeatId, cancellationToken);
         return Result.Ok();

@@ -10,7 +10,7 @@ public sealed record GetPaymentQuery(Guid PaymentId) : IRequest<Result<PaymentMo
 internal sealed class GetPaymentHandler(IPaymentRepository payments)
     : IRequestHandler<GetPaymentQuery, Result<PaymentModel>>
 {
-    public async Task<Result<PaymentModel>> Handle(GetPaymentQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaymentModel>> HandleAsync(GetPaymentQuery request, CancellationToken cancellationToken)
     {
         var payment = await payments.GetAsync(request.PaymentId, cancellationToken);
         return payment is null

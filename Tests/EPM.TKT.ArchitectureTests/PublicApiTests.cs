@@ -49,7 +49,7 @@ public sealed class PublicApiTests
     public void Repository_Implementations_Should_Not_Be_Public()
     {
         var result = Types.InAssembly(TestAssemblies.Infrastructure)
-            .That().ResideInNamespace("EPM.TKT.Infrastructure.Repositories")
+            .That().ResideInNamespace(ArchitectureConfig.InfraRepositoriesNs)
             .And().AreClasses()
             .Should().NotBePublic()
             .GetResult();
@@ -62,10 +62,13 @@ public sealed class PublicApiTests
     [Test]
     public void Domain_Public_Classes_Should_Have_Public_Constructor()
     {
+        // Only model types (records used as DTOs) are required to have public constructors.
+        // Utility types such as Result<T> and Error intentionally use factory methods
+        // with private constructors and live outside the Models sub-namespace.
         var publicClasses = TestAssemblies.Domain
             .GetTypes()
             .Where(t => t.IsClass && t.IsPublic && !t.IsAbstract
-                     && t.Namespace != null && t.Namespace.StartsWith("EPM.TKT.Domain"));
+                     && t.Namespace?.StartsWith(ArchitectureConfig.DomainModelsNs) == true);
 
         foreach (var type in publicClasses)
         {

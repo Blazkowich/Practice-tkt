@@ -9,7 +9,7 @@ public sealed record BookCartCommand(Guid CartId, Guid UserId) : IRequest<Result
 internal sealed class BookCartHandler(ICartRepository carts)
     : IRequestHandler<BookCartCommand, Result<Guid>>
 {
-    public async Task<Result<Guid>> Handle(BookCartCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> HandleAsync(BookCartCommand request, CancellationToken cancellationToken)
     {
         var cart = await carts.GetAsync(request.CartId, cancellationToken);
         if (cart is null)

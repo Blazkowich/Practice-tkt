@@ -20,9 +20,9 @@ public sealed class EventsController(ISender sender) : ControllerBase
     [EndpointSummary("List all events")]
     [EndpointDescription("Returns every event in the system along with its status and venue reference.")]
     [ProducesResponseType(typeof(IReadOnlyList<EventHttpResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll(CancellationToken ct)
+    public async Task<IActionResult> GetAllAsync(CancellationToken ct)
     {
-        var events = await sender.Send(new GetEventsQuery(), ct);
+        var events = await sender.SendAsync(new GetEventsQuery(), ct);
         return Ok(events.Select(Map));
     }
 
@@ -36,9 +36,9 @@ public sealed class EventsController(ISender sender) : ControllerBase
     [EndpointSummary("Get seats for an event section")]
     [EndpointDescription("Returns all seats in the given section for the event, each with its current state (Available/Booked/Sold) and applicable price options.")]
     [ProducesResponseType(typeof(IReadOnlyList<SeatHttpResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetSeats(int eventId, int sectionId, CancellationToken ct)
+    public async Task<IActionResult> GetSeatsAsync(int eventId, int sectionId, CancellationToken ct)
     {
-        var result = await sender.Send(new GetEventSectionSeatsQuery(eventId, sectionId), ct);
+        var result = await sender.SendAsync(new GetEventSectionSeatsQuery(eventId, sectionId), ct);
         return result.Match(
             onSuccess: seats => Ok(seats.Select(Map)),
             onFailure: err => Problem(err));
@@ -55,7 +55,7 @@ public sealed class EventsController(ISender sender) : ControllerBase
             s.RowId,
             s.SeatNumber,
             new SeatStateHttpResponse(s.SeatState.Id, s.SeatState.Name),
-            s.PriceOptions.Select(p => new PriceOptionHttpResponse(p.PriceId, p.Name, p.Amount, p.Currency)).ToList());
+            [.. s.PriceOptions.Select(p => new PriceOptionHttpResponse(p.PriceId, p.Name, p.Amount, p.Currency))]);
 
     private IActionResult Problem(Error error) => error.Type switch
     {

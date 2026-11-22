@@ -22,9 +22,9 @@ public sealed class PaymentsController(ISender sender) : ControllerBase
     [EndpointDescription("Returns the payment with its inferred status: Pending (seats booked), Completed (seats sold), or Failed (seats released).")]
     [ProducesResponseType(typeof(PaymentHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetPayment(Guid paymentId, CancellationToken ct)
+    public async Task<IActionResult> GetPaymentAsync(Guid paymentId, CancellationToken ct)
     {
-        var result = await sender.Send(new GetPaymentQuery(paymentId), ct);
+        var result = await sender.SendAsync(new GetPaymentQuery(paymentId), ct);
         return result.Match(
             onSuccess: p => Ok(new PaymentHttpResponse(p.PaymentId, p.CartId, p.Status, p.TotalAmount)),
             onFailure: err => Problem(err));
@@ -40,9 +40,9 @@ public sealed class PaymentsController(ISender sender) : ControllerBase
     [EndpointDescription("Transitions all Booked seats in the payment to the Sold state.")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Complete(Guid paymentId, CancellationToken ct)
+    public async Task<IActionResult> CompleteAsync(Guid paymentId, CancellationToken ct)
     {
-        var result = await sender.Send(new CompletePaymentCommand(paymentId), ct);
+        var result = await sender.SendAsync(new CompletePaymentCommand(paymentId), ct);
         return result.Match(
             onSuccess: () => NoContent(),
             onFailure: err => Problem(err));
@@ -58,9 +58,9 @@ public sealed class PaymentsController(ISender sender) : ControllerBase
     [EndpointDescription("Releases all Booked seats in the payment back to Available state.")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Failed(Guid paymentId, CancellationToken ct)
+    public async Task<IActionResult> FailedAsync(Guid paymentId, CancellationToken ct)
     {
-        var result = await sender.Send(new FailPaymentCommand(paymentId), ct);
+        var result = await sender.SendAsync(new FailPaymentCommand(paymentId), ct);
         return result.Match(
             onSuccess: () => NoContent(),
             onFailure: err => Problem(err));

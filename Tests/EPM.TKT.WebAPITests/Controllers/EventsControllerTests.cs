@@ -30,10 +30,10 @@ public sealed class EventsControllerTests
         [
             new() { EventId = 1, Name = "Concert", EventStatus = "OnSale", EventDate = DateTime.UtcNow.AddDays(10) }
         ];
-        _sender.Setup(s => s.Send(It.IsAny<GetEventsQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetEventsQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(events);
 
-        var result = await _controller.GetAll(default);
+        var result = await _controller.GetAllAsync(default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -41,10 +41,10 @@ public sealed class EventsControllerTests
     [Test]
     public async Task GetAll_ReturnsOk_WithEmptyList()
     {
-        _sender.Setup(s => s.Send(It.IsAny<GetEventsQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetEventsQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync((IReadOnlyList<EventModel>)[]);
 
-        var result = await _controller.GetAll(default);
+        var result = await _controller.GetAllAsync(default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -63,10 +63,10 @@ public sealed class EventsControllerTests
                 PriceOptions = []
             }
         ];
-        _sender.Setup(s => s.Send(It.IsAny<GetEventSectionSeatsQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetEventSectionSeatsQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<IReadOnlyList<SeatAvailabilityModel>>.Ok(seats));
 
-        var result = await _controller.GetSeats(eventId: 1, sectionId: 1, default);
+        var result = await _controller.GetSeatsAsync(eventId: 1, sectionId: 1, default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -74,10 +74,10 @@ public sealed class EventsControllerTests
     [Test]
     public async Task GetSeats_ReturnsNotFound_WhenEventOrSectionNotFound()
     {
-        _sender.Setup(s => s.Send(It.IsAny<GetEventSectionSeatsQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetEventSectionSeatsQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<IReadOnlyList<SeatAvailabilityModel>>.Fail("Event not found.", ErrorType.NotFound));
 
-        var result = await _controller.GetSeats(eventId: 99, sectionId: 1, default);
+        var result = await _controller.GetSeatsAsync(eventId: 99, sectionId: 1, default);
 
         Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
     }

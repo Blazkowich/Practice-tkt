@@ -11,7 +11,7 @@ public interface ISender
     /// Sends a request through the pipeline and returns the handler result.
     /// </summary>
     /// <exception cref="HandlerNotRegisteredException">No handler registered for the request runtime type.</exception>
-    Task<TResponse> Send<TResponse>(
+    Task<TResponse> SendAsync<TResponse>(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default);
 
@@ -19,5 +19,5 @@ public interface ISender
     /// Sends a request with no return value through the pipeline.
     /// </summary>
     /// <exception cref="HandlerNotRegisteredException">No handler registered for the request runtime type.</exception>
-    Task Send(IRequest request, CancellationToken cancellationToken = default);
+    Task SendAsync(IRequest request, CancellationToken cancellationToken = default);
 }

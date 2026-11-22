@@ -6,6 +6,6 @@ public sealed record LogoutCommand(string RefreshToken) : IRequest;
 
 internal sealed class LogoutHandler : IRequestHandler<LogoutCommand>
 {
-    public Task Handle(LogoutCommand request, CancellationToken cancellationToken)
+    public Task HandleAsync(LogoutCommand request, CancellationToken cancellationToken)
         => Task.CompletedTask;
 }

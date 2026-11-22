@@ -5,18 +5,13 @@ namespace EPM.TKT.ArchitectureTests;
 [TestFixture]
 public sealed class DependencyRulesTests
 {
-    private const string InfrastructureNs = "EPM.TKT.Infrastructure";
-    private const string AppNs            = "EPM.TKT.App";
-    private const string WebApiNs         = "EPM.TKT.WebApi";
-    private const string ExternalNs       = "EPM.TKT.External";
-
     // ── Domain must be the innermost layer ───────────────────────────────────
 
     [Test]
     public void Domain_ShouldNot_DependOn_Application()
     {
         var result = Types.InAssembly(TestAssemblies.Domain)
-            .ShouldNot().HaveDependencyOn(AppNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.AppNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True, "Domain must not depend on the Application layer.");
@@ -26,7 +21,7 @@ public sealed class DependencyRulesTests
     public void Domain_ShouldNot_DependOn_Infrastructure()
     {
         var result = Types.InAssembly(TestAssemblies.Domain)
-            .ShouldNot().HaveDependencyOn(InfrastructureNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.InfrastructureNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True, "Domain must not depend on Infrastructure.");
@@ -36,7 +31,7 @@ public sealed class DependencyRulesTests
     public void Domain_ShouldNot_DependOn_WebApi()
     {
         var result = Types.InAssembly(TestAssemblies.Domain)
-            .ShouldNot().HaveDependencyOn(WebApiNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.WebApiNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True, "Domain must not depend on the WebApi layer.");
@@ -48,7 +43,7 @@ public sealed class DependencyRulesTests
     public void Application_ShouldNot_DependOn_Infrastructure()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .ShouldNot().HaveDependencyOn(InfrastructureNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.InfrastructureNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True, "Application layer must not depend on Infrastructure.");
@@ -58,7 +53,7 @@ public sealed class DependencyRulesTests
     public void Application_ShouldNot_DependOn_WebApi()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .ShouldNot().HaveDependencyOn(WebApiNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.WebApiNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True, "Application layer must not depend on the WebApi layer.");
@@ -68,7 +63,7 @@ public sealed class DependencyRulesTests
     public void Application_ShouldNot_DependOn_External()
     {
         var result = Types.InAssembly(TestAssemblies.App)
-            .ShouldNot().HaveDependencyOn(ExternalNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.ExternalNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True, "Application layer must not depend on External clients.");
@@ -80,7 +75,7 @@ public sealed class DependencyRulesTests
     public void Infrastructure_ShouldNot_DependOn_WebApi()
     {
         var result = Types.InAssembly(TestAssemblies.Infrastructure)
-            .ShouldNot().HaveDependencyOn(WebApiNs)
+            .ShouldNot().HaveDependencyOn(ArchitectureConfig.WebApiNs)
             .GetResult();
 
         Assert.That(result.IsSuccessful, Is.True, "Infrastructure must not depend on the WebApi layer.");

@@ -34,10 +34,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task Register_ReturnsOk_WhenSuccessful()
     {
-        _sender.Setup(s => s.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<AuthResult>.Ok(FakeAuth()));
 
-        var result = await _controller.Register(
+        var result = await _controller.RegisterAsync(
             new RegisterHttpRequest("user@example.com", "P@ssword1", "John", "Doe"), default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -46,10 +46,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task Register_ReturnsConflict_WhenEmailAlreadyRegistered()
     {
-        _sender.Setup(s => s.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<AuthResult>.Fail("Email already registered.", ErrorType.Conflict));
 
-        var result = await _controller.Register(
+        var result = await _controller.RegisterAsync(
             new RegisterHttpRequest("dup@example.com", "P@ssword1", null, null), default);
 
         Assert.That(result, Is.InstanceOf<ConflictObjectResult>());
@@ -60,10 +60,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task Login_ReturnsOk_WhenCredentialsAreValid()
     {
-        _sender.Setup(s => s.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<AuthResult>.Ok(FakeAuth()));
 
-        var result = await _controller.Login(
+        var result = await _controller.LoginAsync(
             new LoginHttpRequest("user@example.com", "P@ssword1"), default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -72,10 +72,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task Login_ReturnsUnauthorized_WhenCredentialsAreInvalid()
     {
-        _sender.Setup(s => s.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<AuthResult>.Fail("Invalid credentials.", ErrorType.Unauthorized));
 
-        var result = await _controller.Login(
+        var result = await _controller.LoginAsync(
             new LoginHttpRequest("user@example.com", "wrong-pass"), default);
 
         Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
@@ -86,10 +86,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task Refresh_ReturnsOk_WhenTokenIsValid()
     {
-        _sender.Setup(s => s.Send(It.IsAny<RefreshTokenCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<RefreshTokenCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<AuthResult>.Ok(FakeAuth()));
 
-        var result = await _controller.Refresh(new RefreshTokenHttpRequest("valid-rt"), default);
+        var result = await _controller.RefreshAsync(new RefreshTokenHttpRequest("valid-rt"), default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -97,10 +97,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task Refresh_ReturnsUnauthorized_WhenTokenIsExpired()
     {
-        _sender.Setup(s => s.Send(It.IsAny<RefreshTokenCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<RefreshTokenCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<AuthResult>.Fail("Token expired.", ErrorType.Unauthorized));
 
-        var result = await _controller.Refresh(new RefreshTokenHttpRequest("expired-rt"), default);
+        var result = await _controller.RefreshAsync(new RefreshTokenHttpRequest("expired-rt"), default);
 
         Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
     }
@@ -110,10 +110,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task ForgotPassword_ReturnsOk_Always()
     {
-        _sender.Setup(s => s.Send(It.IsAny<ForgotPasswordCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<ForgotPasswordCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync("reset-token-xyz");
 
-        var result = await _controller.ForgotPassword(
+        var result = await _controller.ForgotPasswordAsync(
             new ForgotPasswordHttpRequest("user@example.com"), default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -124,10 +124,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task ResetPassword_ReturnsNoContent_WhenSuccessful()
     {
-        _sender.Setup(s => s.Send(It.IsAny<ResetPasswordCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<ResetPasswordCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result.Ok());
 
-        var result = await _controller.ResetPassword(
+        var result = await _controller.ResetPasswordAsync(
             new ResetPasswordHttpRequest("valid-token", "NewP@ss1"), default);
 
         Assert.That(result, Is.InstanceOf<NoContentResult>());
@@ -136,10 +136,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task ResetPassword_ReturnsUnauthorized_WhenTokenIsInvalid()
     {
-        _sender.Setup(s => s.Send(It.IsAny<ResetPasswordCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<ResetPasswordCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result.Fail("Invalid or expired reset token.", ErrorType.Unauthorized));
 
-        var result = await _controller.ResetPassword(
+        var result = await _controller.ResetPasswordAsync(
             new ResetPasswordHttpRequest("bad-token", "NewP@ss1"), default);
 
         Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
@@ -150,10 +150,10 @@ public sealed class AuthControllerTests
     [Test]
     public async Task Logout_ReturnsNoContent()
     {
-        _sender.Setup(s => s.Send(It.IsAny<LogoutCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<LogoutCommand>(), It.IsAny<CancellationToken>()))
                .Returns(Task.CompletedTask);
 
-        var result = await _controller.Logout(new RefreshTokenHttpRequest("rt"), default);
+        var result = await _controller.LogoutAsync(new RefreshTokenHttpRequest("rt"), default);
 
         Assert.That(result, Is.InstanceOf<NoContentResult>());
     }

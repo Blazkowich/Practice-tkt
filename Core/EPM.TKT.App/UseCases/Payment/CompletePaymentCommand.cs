@@ -9,7 +9,7 @@ public sealed record CompletePaymentCommand(Guid PaymentId) : IRequest<Result>;
 internal sealed class CompletePaymentHandler(IPaymentRepository payments)
     : IRequestHandler<CompletePaymentCommand, Result>
 {
-    public async Task<Result> Handle(CompletePaymentCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(CompletePaymentCommand request, CancellationToken cancellationToken)
     {
         var payment = await payments.GetAsync(request.PaymentId, cancellationToken);
         if (payment is null)

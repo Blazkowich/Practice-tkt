@@ -25,10 +25,15 @@ public sealed class AuthController(ISender sender) : ControllerBase
     [EndpointDescription("Creates a new user, assigns the User role, and returns a token pair. Returns 409 if the email is already registered.")]
     [ProducesResponseType(typeof(AuthHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Register([FromBody] RegisterHttpRequest request, CancellationToken ct)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterHttpRequest request, CancellationToken ct)
     {
-        var result = await sender.Send(
-            new RegisterCommand(request.Email, request.Password, request.FirstName, request.LastName), ct);
+        var result = await sender.SendAsync(
+            new RegisterCommand(
+                    request.Email, 
+                    request.Password, 
+                    request.FirstName, 
+                    request.LastName
+                ), ct);
 
         return result.Match(
             onSuccess: auth => Ok(Map(auth)),
@@ -46,9 +51,9 @@ public sealed class AuthController(ISender sender) : ControllerBase
     [EndpointDescription("Validates credentials and returns a JWT access token (15 min) and an opaque refresh token (7 days).")]
     [ProducesResponseType(typeof(AuthHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Login([FromBody] LoginHttpRequest request, CancellationToken ct)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginHttpRequest request, CancellationToken ct)
     {
-        var result = await sender.Send(new LoginCommand(request.Email, request.Password), ct);
+        var result = await sender.SendAsync(new LoginCommand(request.Email, request.Password), ct);
 
         return result.Match(
             onSuccess: auth => Ok(Map(auth)),
@@ -66,9 +71,9 @@ public sealed class AuthController(ISender sender) : ControllerBase
     [EndpointDescription("Rotates the refresh token: the supplied token is revoked and a fresh token pair is returned.")]
     [ProducesResponseType(typeof(AuthHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Refresh([FromBody] RefreshTokenHttpRequest request, CancellationToken ct)
+    public async Task<IActionResult> RefreshAsync([FromBody] RefreshTokenHttpRequest request, CancellationToken ct)
     {
-        var result = await sender.Send(new RefreshTokenCommand(request.RefreshToken), ct);
+        var result = await sender.SendAsync(new RefreshTokenCommand(request.RefreshToken), ct);
 
         return result.Match(
             onSuccess: auth => Ok(Map(auth)),
@@ -83,9 +88,9 @@ public sealed class AuthController(ISender sender) : ControllerBase
     [EndpointSummary("Request a password reset token")]
     [EndpointDescription("Generates a signed reset token (30 min). In production the token is delivered by email; it is returned directly here for development convenience.")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordHttpRequest request, CancellationToken ct)
+    public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordHttpRequest request, CancellationToken ct)
     {
-        var resetToken = await sender.Send(new ForgotPasswordCommand(request.Email), ct);
+        var resetToken = await sender.SendAsync(new ForgotPasswordCommand(request.Email), ct);
         return Ok(new { ResetToken = resetToken });
     }
 
@@ -101,9 +106,9 @@ public sealed class AuthController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordHttpRequest request, CancellationToken ct)
+    public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordHttpRequest request, CancellationToken ct)
     {
-        var result = await sender.Send(new ResetPasswordCommand(request.ResetToken, request.NewPassword), ct);
+        var result = await sender.SendAsync(new ResetPasswordCommand(request.ResetToken, request.NewPassword), ct);
 
         return result.Match(
             onSuccess: () => NoContent(),
@@ -121,9 +126,9 @@ public sealed class AuthController(ISender sender) : ControllerBase
     [EndpointDescription("Revokes the supplied refresh token. Requires a valid Bearer access token in the Authorization header.")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Logout([FromBody] RefreshTokenHttpRequest request, CancellationToken ct)
+    public async Task<IActionResult> LogoutAsync([FromBody] RefreshTokenHttpRequest request, CancellationToken ct)
     {
-        await sender.Send(new LogoutCommand(request.RefreshToken), ct);
+        await sender.SendAsync(new LogoutCommand(request.RefreshToken), ct);
         return NoContent();
     }
 

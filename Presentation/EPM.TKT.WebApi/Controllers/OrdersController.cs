@@ -26,9 +26,9 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     [EndpointDescription("Returns the cart with all items, prices and total. The cartId is generated and stored client-side.")]
     [ProducesResponseType(typeof(CartHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetCart(Guid cartId, CancellationToken ct)
+    public async Task<IActionResult> GetCartAsync(Guid cartId, CancellationToken ct)
     {
-        var cart = await sender.Send(new GetCartQuery(cartId), ct);
+        var cart = await sender.SendAsync(new GetCartQuery(cartId), ct);
         return cart is null ? NotFound(new { Message = "Cart not found." }) : Ok(Map(cart));
     }
 
@@ -47,12 +47,12 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     [ProducesResponseType(typeof(CartHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> AddToCart(
+    public async Task<IActionResult> AddToCartAsync(
         Guid cartId, [FromBody] AddToCartHttpRequest request, CancellationToken ct)
     {
         if (!TryGetUserId(out var userId)) return Unauthorized();
 
-        var result = await sender.Send(
+        var result = await sender.SendAsync(
             new AddToCartCommand(cartId, userId, request.EventId, request.SeatId, request.PriceId), ct);
 
         return result.Match(
@@ -72,10 +72,10 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     [EndpointDescription("Removes the given seat from the cart. Operation is idempotent — no error if the seat is not present.")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RemoveFromCart(
+    public async Task<IActionResult> RemoveFromCartAsync(
         Guid cartId, int eventId, int seatId, CancellationToken ct)
     {
-        var result = await sender.Send(new RemoveFromCartCommand(cartId, eventId, seatId), ct);
+        var result = await sender.SendAsync(new RemoveFromCartCommand(cartId, eventId, seatId), ct);
         return result.Match(
             onSuccess: () => NoContent(),
             onFailure: err => Problem(err));
@@ -95,11 +95,11 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     [ProducesResponseType(typeof(BookHttpResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Book(Guid cartId, CancellationToken ct)
+    public async Task<IActionResult> BookAsync(Guid cartId, CancellationToken ct)
     {
         if (!TryGetUserId(out var userId)) return Unauthorized();
 
-        var result = await sender.Send(new BookCartCommand(cartId, userId), ct);
+        var result = await sender.SendAsync(new BookCartCommand(cartId, userId), ct);
         return result.Match(
             onSuccess: paymentId => Ok(new BookHttpResponse(paymentId)),
             onFailure: err => Problem(err));

@@ -12,7 +12,7 @@ internal sealed class RefreshTokenHandler(
     IUserRepository users,
     ITokenService tokens) : IRequestHandler<RefreshTokenCommand, Result<AuthResult>>
 {
-    public async Task<Result<AuthResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthResult>> HandleAsync(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         var userId = tokens.ValidateRefreshToken(request.RefreshToken);
         if (userId is null)

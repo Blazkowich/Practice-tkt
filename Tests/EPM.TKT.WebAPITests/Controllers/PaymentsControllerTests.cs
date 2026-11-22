@@ -31,10 +31,10 @@ public sealed class PaymentsControllerTests
         {
             PaymentId = paymentId, CartId = Guid.NewGuid(), Status = "Pending", TotalAmount = 120m
         };
-        _sender.Setup(s => s.Send(It.IsAny<GetPaymentQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetPaymentQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<PaymentModel>.Ok(payment));
 
-        var result = await _controller.GetPayment(paymentId, default);
+        var result = await _controller.GetPaymentAsync(paymentId, default);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -42,10 +42,10 @@ public sealed class PaymentsControllerTests
     [Test]
     public async Task GetPayment_ReturnsNotFound_WhenMissing()
     {
-        _sender.Setup(s => s.Send(It.IsAny<GetPaymentQuery>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<GetPaymentQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<PaymentModel>.Fail("Payment not found.", ErrorType.NotFound));
 
-        var result = await _controller.GetPayment(Guid.NewGuid(), default);
+        var result = await _controller.GetPaymentAsync(Guid.NewGuid(), default);
 
         Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
     }
@@ -55,10 +55,10 @@ public sealed class PaymentsControllerTests
     [Test]
     public async Task Complete_ReturnsNoContent_WhenSuccessful()
     {
-        _sender.Setup(s => s.Send(It.IsAny<CompletePaymentCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<CompletePaymentCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result.Ok());
 
-        var result = await _controller.Complete(Guid.NewGuid(), default);
+        var result = await _controller.CompleteAsync(Guid.NewGuid(), default);
 
         Assert.That(result, Is.InstanceOf<NoContentResult>());
     }
@@ -66,10 +66,10 @@ public sealed class PaymentsControllerTests
     [Test]
     public async Task Complete_ReturnsNotFound_WhenPaymentMissing()
     {
-        _sender.Setup(s => s.Send(It.IsAny<CompletePaymentCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<CompletePaymentCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result.Fail("Payment not found.", ErrorType.NotFound));
 
-        var result = await _controller.Complete(Guid.NewGuid(), default);
+        var result = await _controller.CompleteAsync(Guid.NewGuid(), default);
 
         Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
     }
@@ -79,10 +79,10 @@ public sealed class PaymentsControllerTests
     [Test]
     public async Task Failed_ReturnsNoContent_WhenSuccessful()
     {
-        _sender.Setup(s => s.Send(It.IsAny<FailPaymentCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<FailPaymentCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result.Ok());
 
-        var result = await _controller.Failed(Guid.NewGuid(), default);
+        var result = await _controller.FailedAsync(Guid.NewGuid(), default);
 
         Assert.That(result, Is.InstanceOf<NoContentResult>());
     }
@@ -90,10 +90,10 @@ public sealed class PaymentsControllerTests
     [Test]
     public async Task Failed_ReturnsNotFound_WhenPaymentMissing()
     {
-        _sender.Setup(s => s.Send(It.IsAny<FailPaymentCommand>(), It.IsAny<CancellationToken>()))
+        _sender.Setup(s => s.SendAsync(It.IsAny<FailPaymentCommand>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result.Fail("Payment not found.", ErrorType.NotFound));
 
-        var result = await _controller.Failed(Guid.NewGuid(), default);
+        var result = await _controller.FailedAsync(Guid.NewGuid(), default);
 
         Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
     }

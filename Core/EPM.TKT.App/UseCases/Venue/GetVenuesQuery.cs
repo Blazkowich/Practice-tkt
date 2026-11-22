@@ -9,6 +9,6 @@ public sealed record GetVenuesQuery : IRequest<IReadOnlyList<VenueModel>>;
 internal sealed class GetVenuesHandler(IVenueRepository venues)
     : IRequestHandler<GetVenuesQuery, IReadOnlyList<VenueModel>>
 {
-    public Task<IReadOnlyList<VenueModel>> Handle(GetVenuesQuery request, CancellationToken cancellationToken)
+    public Task<IReadOnlyList<VenueModel>> HandleAsync(GetVenuesQuery request, CancellationToken cancellationToken)
         => venues.GetAllAsync(cancellationToken);
 }
