@@ -2,7 +2,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS restore
 WORKDIR /src
 
-COPY EPM.TKT.slnx .
 COPY Core/EPM.TKT.App/EPM.TKT.App.csproj                                     Core/EPM.TKT.App/
 COPY Core/EPM.TKT.Domain/EPM.TKT.Domain.csproj                               Core/EPM.TKT.Domain/
 COPY Core/EPM.TKT.Mediator/EPM.TKT.Mediator.csproj                           Core/EPM.TKT.Mediator/
@@ -14,7 +13,11 @@ COPY Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj                Tes
 COPY Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj                Tests/EPM.TKT.MediatorTests/
 COPY Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                    Tests/EPM.TKT.WebAPITests/
 
-RUN dotnet restore EPM.TKT.slnx
+RUN dotnet restore Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj && \
+    dotnet restore Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj && \
+    dotnet restore Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj && \
+    dotnet restore Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj && \
+    dotnet restore Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj
 
 # ── 2. build ─────────────────────────────────────────────────────────────────
 FROM restore AS build
