@@ -38,17 +38,17 @@ internal class TKTDbContext(DbContextOptions<TKTDbContext> options) : DbContext(
     public DbSet<Ticket> Tickets { get; set; }
 
     // Transactions
-    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default)
+    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default)
         => Database.BeginTransactionAsync(ct);
 
-    async Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default) 
+    public async Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default) 
         => await ExecuteInTransactionAsync<bool>(async ct =>
         {
             await action(ct);
             return true;
         }, ct);
 
-    async Task<T> ExecuteInTransactionAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct = default)
+    public async Task<T> ExecuteInTransactionAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct = default)
     {
         if (Database.CurrentTransaction is not null)
             return await action(ct);
