@@ -1,12 +1,12 @@
 using EPM.TKT.App.Repositories;
 using EPM.TKT.App.Services;
 using EPM.TKT.Infrastructure.Context;
-using EPM.TKT.Infrastructure.Context.Interfaces;
 using EPM.TKT.Infrastructure.Options;
 using EPM.TKT.Infrastructure.Repositories;
 using EPM.TKT.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace EPM.TKT.Infrastructure.DependencyInjections;
 
@@ -22,6 +22,12 @@ public static class ServiceCollectionExtensions
                 foreach (var entry in config.GetSection("ConnectionStrings").GetChildren())
                     opt.ConnectionStrings[entry.Key] = entry.Value ?? string.Empty;
             });
+
+        services.AddOptions<JwtOptions>()
+            .BindConfiguration("Jwt")
+            .ValidateOnStart();
+
+        services.AddSingleton(sp => sp.GetRequiredService<IOptions<JwtOptions>>().Value);
 
         // DbContext factory / provider chain
         services.AddTransient<IDbContextFactory, DbContextFactory>();

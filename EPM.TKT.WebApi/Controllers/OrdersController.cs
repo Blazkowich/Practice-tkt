@@ -114,9 +114,9 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     private static CartHttpResponse Map(CartModel c) => new(
         c.CartId,
         c.EventId,
-        c.Items.Select(i => new CartItemHttpResponse(
+        [.. c.Items.Select(i => new CartItemHttpResponse(
             i.EventSeatId, i.VenueSeatId, i.SeatNumber, i.RowName,
-            i.SectionName, i.PriceId, i.PriceName, i.Amount, i.Currency)).ToList(),
+            i.SectionName, i.PriceId, i.PriceName, i.Amount, i.Currency))],
         c.TotalAmount);
 
     private IActionResult Problem(Error error) => error.Type switch

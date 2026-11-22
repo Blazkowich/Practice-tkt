@@ -2,21 +2,18 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using EPM.TKT.App.Services;
-using Microsoft.Extensions.Configuration;
+using EPM.TKT.Infrastructure.Options;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EPM.TKT.Infrastructure.Services;
 
-internal sealed class TokenService(IConfiguration config) : ITokenService
+internal sealed class TokenService(IOptions<JwtOptions> jwtOptions) : ITokenService
 {
-    private readonly string _secret   = config["Jwt:Secret"]   ?? throw new InvalidOperationException("Jwt:Secret is not configured.");
-    private readonly string _issuer   = config["Jwt:Issuer"]   ?? "EPM.TKT";
-    private readonly string _audience = config["Jwt:Audience"] ?? "EPM.TKT.Users";
-    private readonly int _accessMinutes = int.Parse(config["Jwt:AccessTokenExpiryMinutes"] ?? "15");
-    private readonly int _refreshDays   = int.Parse(config["Jwt:RefreshTokenExpiryDays"]   ?? "7");
-    private readonly int _resetMinutes  = int.Parse(config["Jwt:ResetTokenExpiryMinutes"]  ?? "30");
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
-    private SymmetricSecurityKey Key => new(Encoding.UTF8.GetBytes(_secret));
+
+    private SymmetricSecurityKey Key => new(Encoding.UTF8.GetBytes(_jwtOptions.Secret));
 
     public string GenerateAccessToken(Guid userId, string email, IEnumerable<string> roles)
     {
@@ -32,8 +29,8 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
         {
             Subject            = new ClaimsIdentity(claims),
             Expires            = GetAccessTokenExpiry(),
-            Issuer             = _issuer,
-            Audience           = _audience,
+            Issuer             = _jwtOptions.Issuer,
+            Audience           = _jwtOptions.Audience,
             SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
         };
 
@@ -45,15 +42,15 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
     {
         var descriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
-            {
+            Subject = new ClaimsIdentity(
+            [
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim("purpose", "refresh"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
-            Expires            = DateTime.UtcNow.AddDays(_refreshDays),
-            Issuer             = _issuer,
-            Audience           = _audience,
+            ]),
+            Expires            = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpiryDays),
+            Issuer             = _jwtOptions.Issuer,
+            Audience           = _jwtOptions.Audience,
             SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
         };
         var handler = new JwtSecurityTokenHandler();
@@ -69,8 +66,8 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey        = Key,
-                ValidIssuer             = _issuer,
-                ValidAudience           = _audience,
+                ValidIssuer             = _jwtOptions.Issuer,
+                ValidAudience           = _jwtOptions.Audience,
                 ValidateLifetime        = true,
                 ClockSkew               = TimeSpan.Zero
             }, out _);
@@ -87,14 +84,14 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
     {
         var descriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
-            {
+            Subject = new ClaimsIdentity(
+            [
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim("purpose", "password-reset")
-            }),
-            Expires            = DateTime.UtcNow.AddMinutes(_resetMinutes),
-            Issuer             = _issuer,
-            Audience           = _audience,
+            ]),
+            Expires            = DateTime.UtcNow.AddMinutes(_jwtOptions.ResetTokenExpiryMinutes),
+            Issuer             = _jwtOptions.Issuer,
+            Audience           = _jwtOptions.Audience,
             SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
         };
 
@@ -111,8 +108,8 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey        = Key,
-                ValidIssuer             = _issuer,
-                ValidAudience           = _audience,
+                ValidIssuer             = _jwtOptions.Issuer,
+                ValidAudience           = _jwtOptions.Audience,
                 ValidateLifetime        = true,
                 ClockSkew               = TimeSpan.Zero
             }, out _);
@@ -125,5 +122,5 @@ internal sealed class TokenService(IConfiguration config) : ITokenService
         catch { return null; }
     }
 
-    public DateTime GetAccessTokenExpiry() => DateTime.UtcNow.AddMinutes(_accessMinutes);
+    public DateTime GetAccessTokenExpiry() => DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpiryMinutes);
 }
