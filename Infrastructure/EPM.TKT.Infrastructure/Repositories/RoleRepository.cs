@@ -42,7 +42,7 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
         CancellationToken ct = default
     )
     {
-        await context.ExecuteTransactionAsync(async token =>
+        await context.ExecuteInTransactionAsync(async token =>
         {
             var exists = await context.UserRoles
                 .AnyAsync(ur => ur.UserId == userId && ur.RoleId == (byte)roleType, token);
