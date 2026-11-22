@@ -36,4 +36,11 @@
     <ProjectReference Include="..\EPM.TKT.External\EPM.TKT.External.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Allow test project to access internal types -->
+    <InternalsVisibleTo Include="EPM.TKT.InfrastructureTests" />
+    <!-- Allow Moq's Castle.DynamicProxy to proxy internal types -->
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
 </Project>
