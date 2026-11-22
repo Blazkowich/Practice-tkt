@@ -11,24 +11,24 @@ internal static class PriceMappingExtensions
 
     public static PriceModel MapToDomainModel(this Price p) => new()
     {
-        PriceId       = p.PriceId,
-        OfferId       = p.OfferId,
-        SectionId     = p.SectionId,
-        RowId         = p.RowId,
+        PriceId = p.PriceId,
+        OfferId = p.OfferId,
+        SectionId = p.SectionId,
+        RowId = p.RowId,
         PriceCategory = p.PriceCategory != null ? p.PriceCategory.Name : string.Empty,
-        Amount        = p.Amount,
-        Currency      = p.Currency
+        Amount = p.Amount,
+        Currency = p.Currency
     };
 
     private static readonly Expression<Func<Price, PriceModel>> MapToDomainExpression =
         p => new PriceModel
         {
-            PriceId       = p.PriceId,
-            OfferId       = p.OfferId,
-            SectionId     = p.SectionId,
-            RowId         = p.RowId,
+            PriceId = p.PriceId,
+            OfferId = p.OfferId,
+            SectionId = p.SectionId,
+            RowId = p.RowId,
             PriceCategory = p.PriceCategory != null ? p.PriceCategory.Name : string.Empty,
-            Amount        = p.Amount,
-            Currency      = p.Currency
+            Amount = p.Amount,
+            Currency = p.Currency
         };
 }

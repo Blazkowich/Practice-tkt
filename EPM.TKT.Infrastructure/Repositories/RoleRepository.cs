@@ -39,8 +39,8 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
         {
             context.UserRoles.Add(new UserRole
             {
-                UserId     = userId,
-                RoleId     = roleId,
+                UserId = userId,
+                RoleId = roleId,
                 AssignedAt = DateTime.UtcNow
             });
             await context.SaveChangesAsync(ct);

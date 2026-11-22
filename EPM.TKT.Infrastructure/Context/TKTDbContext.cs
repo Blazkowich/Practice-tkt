@@ -41,7 +41,7 @@ internal class TKTDbContext(DbContextOptions<TKTDbContext> options) : DbContext(
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default)
         => Database.BeginTransactionAsync(ct);
 
-    public async Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default) 
+    public async Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default)
         => await ExecuteInTransactionAsync<bool>(async ct =>
         {
             await action(ct);
@@ -55,7 +55,7 @@ internal class TKTDbContext(DbContextOptions<TKTDbContext> options) : DbContext(
 
         var strategy = Database.CreateExecutionStrategy();
 
-        return await strategy.ExecuteAsync(async() =>
+        return await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await Database.BeginTransactionAsync(ct);
             var result = await action(ct);

@@ -9,6 +9,7 @@ internal class Order
     public int EventId { get; set; }
     public Guid CartId { get; set; }
     public decimal TotalAmount { get; set; }
+    public byte OrderStatusId { get; set; }
     public string? PaymentTransactionId { get; set; }
     public DateTime CreatedAt { get; set; }
 

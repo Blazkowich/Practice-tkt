@@ -27,8 +27,8 @@ internal sealed class SectionRepository(ITKTDbContext context) : ISectionReposit
     {
         var section = new Section
         {
-            VenueId   = venueId,
-            Name      = name,
+            VenueId = venueId,
+            Name = name,
             SeatTypeId = seatTypeId,
             SortOrder = sortOrder
         };

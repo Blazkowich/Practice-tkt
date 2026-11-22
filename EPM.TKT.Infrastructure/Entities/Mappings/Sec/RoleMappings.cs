@@ -12,13 +12,13 @@ internal static class RoleMappingExtensions
     public static RoleModel MapToDomainModel(this Role r) => new()
     {
         RoleId = r.RoleId,
-        Name   = r.Name
+        Name = r.Name
     };
 
     private static readonly Expression<Func<Role, RoleModel>> MapToDomainExpression =
         r => new RoleModel
         {
             RoleId = r.RoleId,
-            Name   = r.Name
+            Name = r.Name
         };
 }

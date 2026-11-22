@@ -27,11 +27,11 @@ internal sealed class OrderRepository(ITKTDbContext context) : IOrderRepository
     {
         var order = new Order
         {
-            UserId      = userId,
-            EventId     = eventId,
-            CartId      = cartId,
+            UserId = userId,
+            EventId = eventId,
+            CartId = cartId,
             TotalAmount = totalAmount,
-            CreatedAt   = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow
         };
         context.Orders.Add(order);
         await context.SaveChangesAsync(ct);

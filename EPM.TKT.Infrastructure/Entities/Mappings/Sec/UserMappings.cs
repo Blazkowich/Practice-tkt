@@ -10,11 +10,11 @@ internal static class UserMappingExtensions
         this IQueryable<User> query, IQueryable<UserRole> userRoles, IQueryable<Role> roles)
         => query.Select(u => new UserAuthInfo
         {
-            UserId       = u.UserId,
-            Email        = u.Email,
+            UserId = u.UserId,
+            Email = u.Email,
             PasswordHash = u.PasswordHash,
-            IsActive     = u.IsActive,
-            Roles        = userRoles
+            IsActive = u.IsActive,
+            Roles = userRoles
                 .Where(ur => ur.UserId == u.UserId)
                 .Join(roles, ur => ur.RoleId, r => r.RoleId, (ur, r) => r.Name)
                 .ToList()
@@ -22,10 +22,10 @@ internal static class UserMappingExtensions
 
     public static UserAuthInfo MapToAuthInfo(this User u, IEnumerable<string> roleNames) => new()
     {
-        UserId       = u.UserId,
-        Email        = u.Email,
+        UserId = u.UserId,
+        Email = u.Email,
         PasswordHash = u.PasswordHash,
-        IsActive     = u.IsActive,
-        Roles        = roleNames.ToList()
+        IsActive = u.IsActive,
+        Roles = roleNames.ToList()
     };
 }

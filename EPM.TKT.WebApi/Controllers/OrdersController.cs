@@ -57,7 +57,7 @@ public sealed class OrdersController(ISender sender) : ControllerBase
 
         return result.Match(
             onSuccess: cart => Ok(Map(cart)),
-            onFailure: err  => Problem(err));
+            onFailure: err => Problem(err));
     }
 
     /// <summary>Remove a seat from the cart.</summary>
@@ -102,7 +102,7 @@ public sealed class OrdersController(ISender sender) : ControllerBase
         var result = await sender.Send(new BookCartCommand(cartId, userId), ct);
         return result.Match(
             onSuccess: paymentId => Ok(new BookHttpResponse(paymentId)),
-            onFailure: err       => Problem(err));
+            onFailure: err => Problem(err));
     }
 
     private bool TryGetUserId(out Guid userId)
@@ -122,6 +122,6 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     private IActionResult Problem(Error error) => error.Type switch
     {
         ErrorType.NotFound => NotFound(new { error.Message }),
-        _                  => BadRequest(new { error.Message })
+        _ => BadRequest(new { error.Message })
     };
 }

@@ -13,8 +13,8 @@ internal static class SectionMappingExtensions
         s => new SectionModel
         {
             SectionId = s.SectionId,
-            VenueId   = s.VenueId,
-            Name      = s.Name,
-            SeatType  = s.SeatType != null ? s.SeatType.Name : string.Empty
+            VenueId = s.VenueId,
+            Name = s.Name,
+            SeatType = s.SeatType != null ? s.SeatType.Name : string.Empty
         };
 }

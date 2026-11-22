@@ -27,10 +27,10 @@ internal sealed class TokenService(IOptions<JwtOptions> jwtOptions) : ITokenServ
 
         var descriptor = new SecurityTokenDescriptor
         {
-            Subject            = new ClaimsIdentity(claims),
-            Expires            = GetAccessTokenExpiry(),
-            Issuer             = _jwtOptions.Issuer,
-            Audience           = _jwtOptions.Audience,
+            Subject = new ClaimsIdentity(claims),
+            Expires = GetAccessTokenExpiry(),
+            Issuer = _jwtOptions.Issuer,
+            Audience = _jwtOptions.Audience,
             SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
         };
 
@@ -48,9 +48,9 @@ internal sealed class TokenService(IOptions<JwtOptions> jwtOptions) : ITokenServ
                 new Claim("purpose", "refresh"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             ]),
-            Expires            = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpiryDays),
-            Issuer             = _jwtOptions.Issuer,
-            Audience           = _jwtOptions.Audience,
+            Expires = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpiryDays),
+            Issuer = _jwtOptions.Issuer,
+            Audience = _jwtOptions.Audience,
             SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
         };
         var handler = new JwtSecurityTokenHandler();
@@ -65,11 +65,11 @@ internal sealed class TokenService(IOptions<JwtOptions> jwtOptions) : ITokenServ
             var principal = handler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey        = Key,
-                ValidIssuer             = _jwtOptions.Issuer,
-                ValidAudience           = _jwtOptions.Audience,
-                ValidateLifetime        = true,
-                ClockSkew               = TimeSpan.Zero
+                IssuerSigningKey = Key,
+                ValidIssuer = _jwtOptions.Issuer,
+                ValidAudience = _jwtOptions.Audience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
             }, out _);
 
             if (principal.FindFirst("purpose")?.Value != "refresh") return null;
@@ -89,9 +89,9 @@ internal sealed class TokenService(IOptions<JwtOptions> jwtOptions) : ITokenServ
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim("purpose", "password-reset")
             ]),
-            Expires            = DateTime.UtcNow.AddMinutes(_jwtOptions.ResetTokenExpiryMinutes),
-            Issuer             = _jwtOptions.Issuer,
-            Audience           = _jwtOptions.Audience,
+            Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.ResetTokenExpiryMinutes),
+            Issuer = _jwtOptions.Issuer,
+            Audience = _jwtOptions.Audience,
             SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
         };
 
@@ -107,11 +107,11 @@ internal sealed class TokenService(IOptions<JwtOptions> jwtOptions) : ITokenServ
             var principal = handler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey        = Key,
-                ValidIssuer             = _jwtOptions.Issuer,
-                ValidAudience           = _jwtOptions.Audience,
-                ValidateLifetime        = true,
-                ClockSkew               = TimeSpan.Zero
+                IssuerSigningKey = Key,
+                ValidIssuer = _jwtOptions.Issuer,
+                ValidAudience = _jwtOptions.Audience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
             }, out _);
 
             if (principal.FindFirst("purpose")?.Value != "password-reset") return null;

@@ -13,19 +13,19 @@ public sealed record Error(string Message, ErrorType Type = ErrorType.Validation
 /// <summary>Use for operations that return a value or a business-rule failure.</summary>
 public sealed class Result<T>
 {
-    private readonly T?     _value;
+    private readonly T? _value;
     private readonly Error? _error;
 
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
 
-    public T     Value => IsSuccess  ? _value! : throw new InvalidOperationException("Cannot read Value of a failed Result.");
-    public Error Error => IsFailure  ? _error! : throw new InvalidOperationException("Cannot read Error of a successful Result.");
+    public T Value => IsSuccess ? _value! : throw new InvalidOperationException("Cannot read Value of a failed Result.");
+    public Error Error => IsFailure ? _error! : throw new InvalidOperationException("Cannot read Error of a successful Result.");
 
-    private Result(T value)    { IsSuccess = true;  _value = value; }
-    private Result(Error error){ IsSuccess = false; _error = error; }
+    private Result(T value) { IsSuccess = true; _value = value; }
+    private Result(Error error) { IsSuccess = false; _error = error; }
 
-    public static Result<T> Ok(T value)   => new(value);
+    public static Result<T> Ok(T value) => new(value);
     public static Result<T> Fail(Error e) => new(e);
     public static Result<T> Fail(string message, ErrorType type = ErrorType.Validation)
         => new(new Error(message, type));
@@ -44,11 +44,11 @@ public sealed class Result
 
     public Error Error => IsFailure ? _error! : throw new InvalidOperationException("Cannot read Error of a successful Result.");
 
-    private Result()             { IsSuccess = true; }
-    private Result(Error error)  { IsSuccess = false; _error = error; }
+    private Result() { IsSuccess = true; }
+    private Result(Error error) { IsSuccess = false; _error = error; }
 
-    public static Result Ok()         => new();
-    public static Result Fail(Error e)=> new(e);
+    public static Result Ok() => new();
+    public static Result Fail(Error e) => new(e);
     public static Result Fail(string message, ErrorType type = ErrorType.Validation)
         => new(new Error(message, type));
 

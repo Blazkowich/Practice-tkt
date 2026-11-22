@@ -31,7 +31,7 @@ public sealed class AuthController(ISender sender) : ControllerBase
             new RegisterCommand(request.Email, request.Password, request.FirstName, request.LastName), ct);
 
         return result.Match(
-            onSuccess: auth  => Ok(Map(auth)),
+            onSuccess: auth => Ok(Map(auth)),
             onFailure: error => Problem(error));
     }
 
@@ -51,7 +51,7 @@ public sealed class AuthController(ISender sender) : ControllerBase
         var result = await sender.Send(new LoginCommand(request.Email, request.Password), ct);
 
         return result.Match(
-            onSuccess: auth  => Ok(Map(auth)),
+            onSuccess: auth => Ok(Map(auth)),
             onFailure: error => Problem(error));
     }
 
@@ -71,7 +71,7 @@ public sealed class AuthController(ISender sender) : ControllerBase
         var result = await sender.Send(new RefreshTokenCommand(request.RefreshToken), ct);
 
         return result.Match(
-            onSuccess: auth  => Ok(Map(auth)),
+            onSuccess: auth => Ok(Map(auth)),
             onFailure: error => Problem(error));
     }
 
@@ -133,8 +133,8 @@ public sealed class AuthController(ISender sender) : ControllerBase
     private IActionResult Problem(Error error) => error.Type switch
     {
         ErrorType.Unauthorized => Unauthorized(new { error.Message }),
-        ErrorType.NotFound     => NotFound(new { error.Message }),
-        ErrorType.Conflict     => Conflict(new { error.Message }),
-        _                      => BadRequest(new { error.Message })
+        ErrorType.NotFound => NotFound(new { error.Message }),
+        ErrorType.Conflict => Conflict(new { error.Message }),
+        _ => BadRequest(new { error.Message })
     };
 }

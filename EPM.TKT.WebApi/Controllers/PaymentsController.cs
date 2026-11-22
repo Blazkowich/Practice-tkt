@@ -26,7 +26,7 @@ public sealed class PaymentsController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new GetPaymentQuery(paymentId), ct);
         return result.Match(
-            onSuccess: p  => Ok(new PaymentHttpResponse(p.PaymentId, p.CartId, p.Status, p.TotalAmount)),
+            onSuccess: p => Ok(new PaymentHttpResponse(p.PaymentId, p.CartId, p.Status, p.TotalAmount)),
             onFailure: err => Problem(err));
     }
 
@@ -69,6 +69,6 @@ public sealed class PaymentsController(ISender sender) : ControllerBase
     private IActionResult Problem(Error error) => error.Type switch
     {
         ErrorType.NotFound => NotFound(new { error.Message }),
-        _                  => BadRequest(new { error.Message })
+        _ => BadRequest(new { error.Message })
     };
 }

@@ -11,22 +11,22 @@ internal static class UserAdminMappingExtensions
 
     public static UserModel MapToUserModel(this User u) => new()
     {
-        UserId    = u.UserId,
-        Email     = u.Email,
+        UserId = u.UserId,
+        Email = u.Email,
         FirstName = u.FirstName,
-        LastName  = u.LastName,
+        LastName = u.LastName,
         CreatedAt = u.CreatedAt,
-        IsActive  = u.IsActive
+        IsActive = u.IsActive
     };
 
     private static readonly Expression<Func<User, UserModel>> MapToUserModelExpression =
         u => new UserModel
         {
-            UserId    = u.UserId,
-            Email     = u.Email,
+            UserId = u.UserId,
+            Email = u.Email,
             FirstName = u.FirstName,
-            LastName  = u.LastName,
+            LastName = u.LastName,
             CreatedAt = u.CreatedAt,
-            IsActive  = u.IsActive
+            IsActive = u.IsActive
         };
 }

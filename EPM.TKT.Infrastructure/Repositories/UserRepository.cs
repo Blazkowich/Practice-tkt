@@ -30,12 +30,12 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
     {
         var user = new User
         {
-            Email        = email,
+            Email = email,
             PasswordHash = passwordHash,
-            FirstName    = firstName,
-            LastName     = lastName,
-            CreatedAt    = DateTime.UtcNow,
-            IsActive     = true
+            FirstName = firstName,
+            LastName = lastName,
+            CreatedAt = DateTime.UtcNow,
+            IsActive = true
         };
         context.Users.Add(user);
         context.UserRoles.Add(new UserRole { UserId = user.UserId, RoleId = 1, AssignedAt = DateTime.UtcNow });

@@ -11,24 +11,24 @@ internal static class OrderMappingExtensions
 
     public static OrderModel MapToDomainModel(this Order o) => new()
     {
-        OrderId              = o.OrderId,
-        UserId               = o.UserId,
-        EventId              = o.EventId,
-        CartId               = o.CartId,
-        TotalAmount          = o.TotalAmount,
+        OrderId = o.OrderId,
+        UserId = o.UserId,
+        EventId = o.EventId,
+        CartId = o.CartId,
+        TotalAmount = o.TotalAmount,
         PaymentTransactionId = o.PaymentTransactionId,
-        CreatedAt            = o.CreatedAt
+        CreatedAt = o.CreatedAt
     };
 
     private static readonly Expression<Func<Order, OrderModel>> MapToDomainExpression =
         o => new OrderModel
         {
-            OrderId              = o.OrderId,
-            UserId               = o.UserId,
-            EventId              = o.EventId,
-            CartId               = o.CartId,
-            TotalAmount          = o.TotalAmount,
+            OrderId = o.OrderId,
+            UserId = o.UserId,
+            EventId = o.EventId,
+            CartId = o.CartId,
+            TotalAmount = o.TotalAmount,
             PaymentTransactionId = o.PaymentTransactionId,
-            CreatedAt            = o.CreatedAt
+            CreatedAt = o.CreatedAt
         };
 }

@@ -11,26 +11,26 @@ internal static class EventSeatMappingExtensions
 
     public static EventSeatModel MapToDomainModel(this EventSeat es) => new()
     {
-        EventSeatId  = es.EventSeatId,
-        EventId      = es.EventId,
-        VenueSeatId  = es.VenueSeatId,
-        PriceId      = es.PriceId,
-        SeatState    = es.SeatState != null ? es.SeatState.Name : string.Empty,
+        EventSeatId = es.EventSeatId,
+        EventId = es.EventId,
+        VenueSeatId = es.VenueSeatId,
+        PriceId = es.PriceId,
+        SeatState = es.SeatState != null ? es.SeatState.Name : string.Empty,
         HeldByUserId = es.HeldByUserId,
-        HoldUntil    = es.HoldUntil,
-        CreatedAt    = es.CreatedAt
+        HoldUntil = es.HoldUntil,
+        CreatedAt = es.CreatedAt
     };
 
     private static readonly Expression<Func<EventSeat, EventSeatModel>> MapToDomainExpression =
         es => new EventSeatModel
         {
-            EventSeatId  = es.EventSeatId,
-            EventId      = es.EventId,
-            VenueSeatId  = es.VenueSeatId,
-            PriceId      = es.PriceId,
-            SeatState    = es.SeatState != null ? es.SeatState.Name : string.Empty,
+            EventSeatId = es.EventSeatId,
+            EventId = es.EventId,
+            VenueSeatId = es.VenueSeatId,
+            PriceId = es.PriceId,
+            SeatState = es.SeatState != null ? es.SeatState.Name : string.Empty,
             HeldByUserId = es.HeldByUserId,
-            HoldUntil    = es.HoldUntil,
-            CreatedAt    = es.CreatedAt
+            HoldUntil = es.HoldUntil,
+            CreatedAt = es.CreatedAt
         };
 }

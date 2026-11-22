@@ -28,7 +28,7 @@ internal sealed class RowRepository(ITKTDbContext context) : IRowRepository
         var row = new Row
         {
             SectionId = sectionId,
-            Name      = name,
+            Name = name,
             SortOrder = sortOrder
         };
         context.Rows.Add(row);

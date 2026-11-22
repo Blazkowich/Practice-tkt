@@ -34,13 +34,13 @@ internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepositor
     {
         var ticket = new Ticket
         {
-            OrderId     = orderId,
-            EventId     = eventId,
+            OrderId = orderId,
+            EventId = eventId,
             EventSeatId = eventSeatId,
-            UserId      = userId,
-            PriceId     = priceId,
-            PaidAmount  = paidAmount,
-            IssuedAt    = DateTime.UtcNow
+            UserId = userId,
+            PriceId = priceId,
+            PaidAmount = paidAmount,
+            IssuedAt = DateTime.UtcNow
         };
         context.Tickets.Add(ticket);
         await context.SaveChangesAsync(ct);

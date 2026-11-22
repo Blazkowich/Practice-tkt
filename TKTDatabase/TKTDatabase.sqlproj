@@ -116,6 +116,7 @@
     <Build Include="Schema Objects\tkt\Tables\EventStatus.sql" />
     <Build Include="Schema Objects\tkt\Tables\Offer.sql" />
     <Build Include="Schema Objects\tkt\Tables\Order.sql" />
+    <Build Include="Schema Objects\tkt\Tables\OrderStatus.sql" />
     <Build Include="Schema Objects\tkt\Tables\Price.sql" />
     <Build Include="Schema Objects\tkt\Tables\PriceCategory.sql" />
     <Build Include="Schema Objects\tkt\Tables\Row.sql" />
@@ -135,6 +136,7 @@
     <None Include="Scripts\Post-Deployment\Reference Data\tkt\SeatState.sql" />
     <None Include="Scripts\Post-Deployment\Reference Data\tkt\PriceCategory.sql" />
     <None Include="Scripts\Post-Deployment\Reference Data\tkt\EventStatus.sql" />
+    <None Include="Scripts\Post-Deployment\Reference Data\tkt\OrderStatus.sql" />
     <!-- Test data — sec -->
     <None Include="Scripts\Post-Deployment\TestData\sec\Users.sql" />
     <None Include="Scripts\Post-Deployment\TestData\sec\UserRoles.sql" />

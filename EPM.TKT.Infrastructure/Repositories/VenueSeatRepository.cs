@@ -27,10 +27,10 @@ internal sealed class VenueSeatRepository(ITKTDbContext context) : IVenueSeatRep
     {
         var seat = new VenueSeat
         {
-            SectionId  = sectionId,
-            RowId      = rowId,
+            SectionId = sectionId,
+            RowId = rowId,
             SeatNumber = seatNumber,
-            SortOrder  = sortOrder
+            SortOrder = sortOrder
         };
         context.VenueSeats.Add(seat);
         await context.SaveChangesAsync(ct);

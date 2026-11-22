@@ -11,18 +11,18 @@ internal static class RowMappingExtensions
 
     public static RowModel MapToDomainModel(this Row r) => new()
     {
-        RowId     = r.RowId,
+        RowId = r.RowId,
         SectionId = r.SectionId,
-        Name      = r.Name,
+        Name = r.Name,
         SortOrder = r.SortOrder
     };
 
     private static readonly Expression<Func<Row, RowModel>> MapToDomainExpression =
         r => new RowModel
         {
-            RowId     = r.RowId,
+            RowId = r.RowId,
             SectionId = r.SectionId,
-            Name      = r.Name,
+            Name = r.Name,
             SortOrder = r.SortOrder
         };
 }

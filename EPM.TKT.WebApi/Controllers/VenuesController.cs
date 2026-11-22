@@ -42,7 +42,7 @@ public sealed class VenuesController(ISender sender) : ControllerBase
         var result = await sender.Send(new GetVenueSectionsQuery(venueId), ct);
         return result.Match(
             onSuccess: sections => Ok(sections.Select(Map)),
-            onFailure: err      => Problem(err));
+            onFailure: err => Problem(err));
     }
 
     private static VenueHttpResponse Map(VenueModel v)
@@ -54,6 +54,6 @@ public sealed class VenuesController(ISender sender) : ControllerBase
     private IActionResult Problem(Error error) => error.Type switch
     {
         ErrorType.NotFound => NotFound(new { error.Message }),
-        _                  => BadRequest(new { error.Message })
+        _ => BadRequest(new { error.Message })
     };
 }

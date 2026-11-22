@@ -31,15 +31,15 @@ internal sealed class PaymentRepository(ITKTDbContext context) : IPaymentReposit
             .ToListAsync(ct);
 
         var status = states.Count == 0 ? "Pending"
-            : states.Any(s => s == 3)  ? "Completed"   // any Sold
-            : states.All(s => s == 1)  ? "Failed"       // all Available
+            : states.Any(s => s == 3) ? "Completed"   // any Sold
+            : states.All(s => s == 1) ? "Failed"       // all Available
             : "Pending";
 
         return new PaymentModel
         {
-            PaymentId   = paymentId,
-            CartId      = order.CartId,
-            Status      = status,
+            PaymentId = paymentId,
+            CartId = order.CartId,
+            Status = status,
             TotalAmount = order.TotalAmount
         };
     }

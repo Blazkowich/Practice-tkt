@@ -12,11 +12,11 @@ internal static class EventMappingExtensions
     private static readonly Expression<Func<Event, EventModel>> MapToDomainExpression =
         e => new EventModel
         {
-            EventId     = e.EventId,
-            VenueId     = e.VenueId,
-            Name        = e.Name,
+            EventId = e.EventId,
+            VenueId = e.VenueId,
+            Name = e.Name,
             Description = e.Description,
-            EventDate   = e.EventDate,
+            EventDate = e.EventDate,
             DoorsOpenAt = e.DoorsOpenAt,
             EventStatus = e.EventStatus != null ? e.EventStatus.Name : string.Empty
         };

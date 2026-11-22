@@ -7,8 +7,8 @@ using EPM.TKT.Mediator.Abstractions;
 namespace EPM.TKT.App.UseCases.Auth;
 
 public sealed record RegisterCommand(
-    string  Email,
-    string  Password,
+    string Email,
+    string Password,
     string? FirstName,
     string? LastName
 ) : IRequest<Result<AuthResult>>;
@@ -23,17 +23,17 @@ internal sealed class RegisterHandler(
         if (await users.EmailExistsAsync(request.Email, cancellationToken))
             return Result<AuthResult>.Fail("Email is already registered.", ErrorType.Conflict);
 
-        var hash   = passwords.Hash(request.Password);
+        var hash = passwords.Hash(request.Password);
         var userId = await users.CreateUserAsync(request.Email, hash, request.FirstName, request.LastName, cancellationToken);
 
-        var userInfo     = await users.GetByIdAsync(userId, cancellationToken);
-        var accessToken  = tokens.GenerateAccessToken(userId, request.Email, userInfo!.Roles);
+        var userInfo = await users.GetByIdAsync(userId, cancellationToken);
+        var accessToken = tokens.GenerateAccessToken(userId, request.Email, userInfo!.Roles);
         var refreshToken = tokens.GenerateRefreshToken(userId);
 
         return Result<AuthResult>.Ok(new AuthResult
         {
-            AccessToken       = accessToken,
-            RefreshToken      = refreshToken,
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
             AccessTokenExpiry = tokens.GetAccessTokenExpiry()
         });
     }

@@ -26,13 +26,13 @@ internal sealed class EventRepository(ITKTDbContext context) : IEventRepository
     {
         var ev = new Event
         {
-            VenueId       = venueId,
-            Name          = name,
-            Description   = description,
-            EventDate     = eventDate,
-            DoorsOpenAt   = doorsOpenAt,
+            VenueId = venueId,
+            Name = name,
+            Description = description,
+            EventDate = eventDate,
+            DoorsOpenAt = doorsOpenAt,
             EventStatusId = eventStatusId,
-            CreatedAt     = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow
         };
         context.Events.Add(ev);
         await context.SaveChangesAsync(ct);
@@ -71,9 +71,9 @@ internal sealed class EventRepository(ITKTDbContext context) : IEventRepository
                         && (p.SectionId == null || p.SectionId == sectionId))
             .Select(p => new PriceOptionModel
             {
-                PriceId  = p.PriceId,
-                Name     = p.PriceCategory != null ? p.PriceCategory.Name : string.Empty,
-                Amount   = p.Amount,
+                PriceId = p.PriceId,
+                Name = p.PriceCategory != null ? p.PriceCategory.Name : string.Empty,
+                Amount = p.Amount,
                 Currency = p.Currency
             })
             .ToListAsync(ct);

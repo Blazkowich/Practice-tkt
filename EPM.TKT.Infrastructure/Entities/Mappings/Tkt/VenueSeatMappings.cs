@@ -12,19 +12,19 @@ internal static class VenueSeatMappingExtensions
     public static VenueSeatModel MapToDomainModel(this VenueSeat vs) => new()
     {
         VenueSeatId = vs.VenueSeatId,
-        SectionId   = vs.SectionId,
-        RowId       = vs.RowId,
-        SeatNumber  = vs.SeatNumber,
-        SortOrder   = vs.SortOrder
+        SectionId = vs.SectionId,
+        RowId = vs.RowId,
+        SeatNumber = vs.SeatNumber,
+        SortOrder = vs.SortOrder
     };
 
     private static readonly Expression<Func<VenueSeat, VenueSeatModel>> MapToDomainExpression =
         vs => new VenueSeatModel
         {
             VenueSeatId = vs.VenueSeatId,
-            SectionId   = vs.SectionId,
-            RowId       = vs.RowId,
-            SeatNumber  = vs.SeatNumber,
-            SortOrder   = vs.SortOrder
+            SectionId = vs.SectionId,
+            RowId = vs.RowId,
+            SeatNumber = vs.SeatNumber,
+            SortOrder = vs.SortOrder
         };
 }

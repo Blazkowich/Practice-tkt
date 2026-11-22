@@ -14,6 +14,7 @@ Post-Deployment Script
 :r ".\Reference Data\tkt\SeatState.sql"
 :r ".\Reference Data\tkt\PriceCategory.sql"
 :r ".\Reference Data\tkt\EventStatus.sql"
+:r ".\Reference Data\tkt\OrderStatus.sql"
 :r ".\Reference Data\sec\Role.sql"
 
 --------------------------------------------------------------------------------------

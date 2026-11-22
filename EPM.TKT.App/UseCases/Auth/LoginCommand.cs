@@ -21,13 +21,13 @@ internal sealed class LoginHandler(
             || !passwords.Verify(request.Password, user.PasswordHash))
             return Result<AuthResult>.Fail("Invalid credentials.", ErrorType.Unauthorized);
 
-        var accessToken  = tokens.GenerateAccessToken(user.UserId, user.Email, user.Roles);
+        var accessToken = tokens.GenerateAccessToken(user.UserId, user.Email, user.Roles);
         var refreshToken = tokens.GenerateRefreshToken(user.UserId);
 
         return Result<AuthResult>.Ok(new AuthResult
         {
-            AccessToken       = accessToken,
-            RefreshToken      = refreshToken,
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
             AccessTokenExpiry = tokens.GetAccessTokenExpiry()
         });
     }

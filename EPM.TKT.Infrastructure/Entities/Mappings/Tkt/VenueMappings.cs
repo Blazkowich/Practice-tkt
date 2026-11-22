@@ -16,16 +16,16 @@ internal static class VenueMappingExtensions
         v => new VenueModel
         {
             VenueId = v.VenueId,
-            Name    = v.Name,
-            City    = v.City,
+            Name = v.Name,
+            City = v.City,
             Country = v.Country
         };
 
     private static VenueModel MapToDomain(Venue v) => new()
     {
         VenueId = v.VenueId,
-        Name    = v.Name,
-        City    = v.City,
+        Name = v.Name,
+        City = v.City,
         Country = v.Country
     };
 }

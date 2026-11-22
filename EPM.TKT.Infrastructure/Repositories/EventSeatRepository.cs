@@ -26,11 +26,11 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
     {
         var seat = new EventSeat
         {
-            EventId     = eventId,
+            EventId = eventId,
             VenueSeatId = venueSeatId,
-            PriceId     = priceId,
+            PriceId = priceId,
             SeatStateId = 1, // Available
-            CreatedAt   = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow
         };
         context.EventSeats.Add(seat);
         await context.SaveChangesAsync(ct);

@@ -22,13 +22,13 @@ internal sealed class RefreshTokenHandler(
         if (user is null || !user.IsActive)
             return Result<AuthResult>.Fail("User not found or inactive.", ErrorType.Unauthorized);
 
-        var accessToken     = tokens.GenerateAccessToken(user.UserId, user.Email, user.Roles);
+        var accessToken = tokens.GenerateAccessToken(user.UserId, user.Email, user.Roles);
         var newRefreshToken = tokens.GenerateRefreshToken(user.UserId);
 
         return Result<AuthResult>.Ok(new AuthResult
         {
-            AccessToken       = accessToken,
-            RefreshToken      = newRefreshToken,
+            AccessToken = accessToken,
+            RefreshToken = newRefreshToken,
             AccessTokenExpiry = tokens.GetAccessTokenExpiry()
         });
     }

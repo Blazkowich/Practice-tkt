@@ -14,12 +14,12 @@ internal static class SeatAvailabilityMappingExtensions
         IReadOnlyList<PriceOptionModel> priceOptions)
         => query.Select(es => new SeatAvailabilityModel
         {
-            EventSeatId  = es.EventSeatId,
-            VenueSeatId  = es.VenueSeatId,
-            SectionId    = es.VenueSeat != null ? es.VenueSeat.SectionId : 0,
-            RowId        = es.VenueSeat != null ? es.VenueSeat.RowId : null,
-            SeatNumber   = es.VenueSeat != null ? es.VenueSeat.SeatNumber : null,
-            SeatState    = es.SeatState != null
+            EventSeatId = es.EventSeatId,
+            VenueSeatId = es.VenueSeatId,
+            SectionId = es.VenueSeat != null ? es.VenueSeat.SectionId : 0,
+            RowId = es.VenueSeat != null ? es.VenueSeat.RowId : null,
+            SeatNumber = es.VenueSeat != null ? es.VenueSeat.SeatNumber : null,
+            SeatState = es.SeatState != null
                 ? new SeatStateModel { Id = es.SeatStateId, Name = es.SeatState.Name }
                 : new SeatStateModel { Id = es.SeatStateId },
             PriceOptions = priceOptions

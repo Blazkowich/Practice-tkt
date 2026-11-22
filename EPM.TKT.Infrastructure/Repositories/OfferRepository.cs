@@ -27,12 +27,12 @@ internal sealed class OfferRepository(ITKTDbContext context) : IOfferRepository
     {
         var offer = new Offer
         {
-            EventId     = eventId,
-            Name        = name,
+            EventId = eventId,
+            Name = name,
             SaleStartAt = saleStartAt,
-            SaleEndAt   = saleEndAt,
-            IsActive    = true,
-            CreatedAt   = DateTime.UtcNow
+            SaleEndAt = saleEndAt,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
         };
         context.Offers.Add(offer);
         await context.SaveChangesAsync(ct);

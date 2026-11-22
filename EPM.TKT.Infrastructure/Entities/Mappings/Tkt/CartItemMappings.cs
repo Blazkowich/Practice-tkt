@@ -14,22 +14,22 @@ internal static class CartItemMappingExtensions
         {
             EventSeatId = ci.EventSeatId,
             VenueSeatId = ci.EventSeat != null ? ci.EventSeat.VenueSeatId : 0,
-            SeatNumber  = ci.EventSeat != null && ci.EventSeat.VenueSeat != null
+            SeatNumber = ci.EventSeat != null && ci.EventSeat.VenueSeat != null
                 ? ci.EventSeat.VenueSeat.SeatNumber : null,
-            RowName     = ci.EventSeat != null && ci.EventSeat.VenueSeat != null
+            RowName = ci.EventSeat != null && ci.EventSeat.VenueSeat != null
                           && ci.EventSeat.VenueSeat.Row != null
                 ? ci.EventSeat.VenueSeat.Row.Name : null,
             SectionName = ci.EventSeat != null && ci.EventSeat.VenueSeat != null
                           && ci.EventSeat.VenueSeat.Section != null
                 ? ci.EventSeat.VenueSeat.Section.Name : string.Empty,
-            PriceId     = ci.EventSeat != null && ci.EventSeat.PriceId.HasValue
+            PriceId = ci.EventSeat != null && ci.EventSeat.PriceId.HasValue
                 ? ci.EventSeat.PriceId.Value : 0,
-            PriceName   = ci.EventSeat != null && ci.EventSeat.Price != null
+            PriceName = ci.EventSeat != null && ci.EventSeat.Price != null
                           && ci.EventSeat.Price.PriceCategory != null
                 ? ci.EventSeat.Price.PriceCategory.Name : string.Empty,
-            Amount      = ci.EventSeat != null && ci.EventSeat.Price != null
+            Amount = ci.EventSeat != null && ci.EventSeat.Price != null
                 ? ci.EventSeat.Price.Amount : 0,
-            Currency    = ci.EventSeat != null && ci.EventSeat.Price != null
+            Currency = ci.EventSeat != null && ci.EventSeat.Price != null
                 ? ci.EventSeat.Price.Currency : "USD"
         };
 }

@@ -11,24 +11,24 @@ internal static class OfferMappingExtensions
 
     public static OfferModel MapToDomainModel(this Offer o) => new()
     {
-        OfferId     = o.OfferId,
-        EventId     = o.EventId,
-        Name        = o.Name,
+        OfferId = o.OfferId,
+        EventId = o.EventId,
+        Name = o.Name,
         SaleStartAt = o.SaleStartAt,
-        SaleEndAt   = o.SaleEndAt,
-        IsActive    = o.IsActive,
-        CreatedAt   = o.CreatedAt
+        SaleEndAt = o.SaleEndAt,
+        IsActive = o.IsActive,
+        CreatedAt = o.CreatedAt
     };
 
     private static readonly Expression<Func<Offer, OfferModel>> MapToDomainExpression =
         o => new OfferModel
         {
-            OfferId     = o.OfferId,
-            EventId     = o.EventId,
-            Name        = o.Name,
+            OfferId = o.OfferId,
+            EventId = o.EventId,
+            Name = o.Name,
             SaleStartAt = o.SaleStartAt,
-            SaleEndAt   = o.SaleEndAt,
-            IsActive    = o.IsActive,
-            CreatedAt   = o.CreatedAt
+            SaleEndAt = o.SaleEndAt,
+            IsActive = o.IsActive,
+            CreatedAt = o.CreatedAt
         };
 }

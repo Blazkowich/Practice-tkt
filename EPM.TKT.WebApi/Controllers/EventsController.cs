@@ -41,7 +41,7 @@ public sealed class EventsController(ISender sender) : ControllerBase
         var result = await sender.Send(new GetEventSectionSeatsQuery(eventId, sectionId), ct);
         return result.Match(
             onSuccess: seats => Ok(seats.Select(Map)),
-            onFailure: err   => Problem(err));
+            onFailure: err => Problem(err));
     }
 
     private static EventHttpResponse Map(EventModel e)
@@ -60,6 +60,6 @@ public sealed class EventsController(ISender sender) : ControllerBase
     private IActionResult Problem(Error error) => error.Type switch
     {
         ErrorType.NotFound => NotFound(new { error.Message }),
-        _                  => BadRequest(new { error.Message })
+        _ => BadRequest(new { error.Message })
     };
 }

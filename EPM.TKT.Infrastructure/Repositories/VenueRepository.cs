@@ -26,12 +26,12 @@ internal sealed class VenueRepository(ITKTDbContext context) : IVenueRepository
     {
         var venue = new Venue
         {
-            Name      = name,
-            Address   = address,
-            City      = city,
-            Country   = country,
+            Name = name,
+            Address = address,
+            City = city,
+            Country = country,
             CreatedAt = DateTime.UtcNow,
-            IsActive  = true
+            IsActive = true
         };
         context.Venues.Add(venue);
         await context.SaveChangesAsync(ct);

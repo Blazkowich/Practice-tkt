@@ -26,12 +26,12 @@ internal sealed class PriceRepository(ITKTDbContext context) : IPriceRepository
     {
         var price = new Price
         {
-            OfferId         = offerId,
-            SectionId       = sectionId,
-            RowId           = rowId,
+            OfferId = offerId,
+            SectionId = sectionId,
+            RowId = rowId,
             PriceCategoryId = priceCategoryId,
-            Amount          = amount,
-            Currency        = currency
+            Amount = amount,
+            Currency = currency
         };
         context.Prices.Add(price);
         await context.SaveChangesAsync(ct);
