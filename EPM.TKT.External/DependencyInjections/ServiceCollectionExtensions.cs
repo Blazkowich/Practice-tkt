@@ -2,7 +2,7 @@ using EPM.TKT.App.Services;
 using EPM.TKT.External.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EPM.TKT.External;
+namespace EPM.TKT.External.DependencyInjections;
 
 public static class ServiceCollectionExtensions
 {

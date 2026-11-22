@@ -1,5 +1,5 @@
 using EPM.TKT.App.DependencyInjections;
-using EPM.TKT.External;
+using EPM.TKT.External.DependencyInjections;
 using EPM.TKT.Infrastructure.DependencyInjections;
 using EPM.TKT.WebApi.Contracts.Requests.Auth;
 using EPM.TKT.WebApi.Extensions;
