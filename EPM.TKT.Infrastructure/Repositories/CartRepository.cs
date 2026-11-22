@@ -76,8 +76,7 @@ internal sealed class CartRepository(
             .FirstOrDefaultAsync(ct)
             ?? throw new InvalidOperationException($"EventSeat not found for event {eventId}, seat {venueSeatId}.");
 
-        if (eventSeat.PriceId is null)
-            eventSeat.PriceId = priceId;
+        eventSeat.PriceId ??= priceId;
 
         var alreadyInCart = await context.CartItems
             .AnyAsync(ci => ci.CartId == cartId && ci.EventSeatId == eventSeat.EventSeatId, ct);
@@ -98,17 +97,20 @@ internal sealed class CartRepository(
 
     public async Task RemoveSeatAsync(Guid cartId, int eventId, int venueSeatId, CancellationToken ct = default)
     {
-        var eventSeatId = await context.EventSeats
-            .AsNoTracking()
-            .Where(es => es.EventId == eventId && es.VenueSeatId == venueSeatId)
-            .Select(es => es.EventSeatId)
-            .FirstOrDefaultAsync(ct);
+        await context.ExecuteTransactionAsync(async token =>
+        {
+            var eventSeatId = await context.EventSeats
+                .AsNoTracking()
+                .Where(es => es.EventId == eventId && es.VenueSeatId == venueSeatId)
+                .Select(es => es.EventSeatId)
+                .FirstOrDefaultAsync(ct);
 
-        if (eventSeatId == 0) return;
+            if (eventSeatId == 0) return;
 
-        await context.CartItems
-            .Where(ci => ci.CartId == cartId && ci.EventSeatId == eventSeatId)
-            .ExecuteDeleteAsync(ct);
+            await context.CartItems
+                .Where(ci => ci.CartId == cartId && ci.EventSeatId == eventSeatId)
+                .ExecuteDeleteAsync(ct);
+        }, ct);
     }
 
     public async Task<Guid> BookAsync(Guid cartId, Guid userId, CancellationToken ct = default)

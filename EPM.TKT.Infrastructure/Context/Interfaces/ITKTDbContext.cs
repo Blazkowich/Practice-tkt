@@ -1,6 +1,7 @@
 ﻿using EPM.TKT.Infrastructure.Entities.Sec;
 using EPM.TKT.Infrastructure.Entities.Tkt;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EPM.TKT.Infrastructure.Context.Interfaces;
 
@@ -35,7 +36,11 @@ internal interface ITKTDbContext
     DbSet<Order> Orders { get; set; }
     DbSet<Ticket> Tickets { get; set; }
 
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default);
+    Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default);
+    Task<T> ExecuteInTransactionAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct = default);
+
+    Task<int> SaveChangesAsync(CancellationToken ct = default);
 
     void ClearChangeTracker();
 }

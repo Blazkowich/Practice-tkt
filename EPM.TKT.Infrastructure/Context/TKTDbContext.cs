@@ -2,6 +2,7 @@ using System.Reflection;
 using EPM.TKT.Infrastructure.Entities.Sec;
 using EPM.TKT.Infrastructure.Entities.Tkt;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EPM.TKT.Infrastructure.Context;
 
@@ -36,9 +37,36 @@ internal class TKTDbContext(DbContextOptions<TKTDbContext> options) : DbContext(
     public DbSet<Order> Orders { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
 
+    // Transactions
+    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default)
+        => Database.BeginTransactionAsync(ct);
+
+    async Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default) 
+        => await ExecuteInTransactionAsync<bool>(async ct =>
+        {
+            await action(ct);
+            return true;
+        }, ct);
+
+    async Task<T> ExecuteInTransactionAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct = default)
+    {
+        if (Database.CurrentTransaction is not null)
+            return await action(ct);
+
+        var strategy = Database.CreateExecutionStrategy();
+
+        return await strategy.ExecuteAsync(async() =>
+        {
+            await using var transaction = await Database.BeginTransactionAsync(ct);
+            var result = await action(ct);
+            await transaction.CommitAsync(ct);
+            return result;
+        });
+    }
+
     // Explicit interface members not provided by DbContext base
-    Task<int> ITKTDbContext.SaveChangesAsync(CancellationToken cancellationToken)
-        => base.SaveChangesAsync(cancellationToken);
+    Task<int> ITKTDbContext.SaveChangesAsync(CancellationToken ct)
+        => base.SaveChangesAsync(ct);
 
     public void ClearChangeTracker() => ChangeTracker.Clear();
 
