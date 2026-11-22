@@ -11,30 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
 
-    - name: Restore dependencies
+    - name: Restore
       run: dotnet restore EPM.TKT.slnx
 
     - name: Build
       run: |
-        dotnet build EPM.TKT.WebApi/EPM.TKT.WebApi.csproj --no-restore -c Release
-        dotnet build EPM.TKT.Tests/EPM.TKT.Tests.csproj --no-restore -c Release
+        dotnet build Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj        --no-restore -c Release
+        dotnet build Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj           --no-restore -c Release
+        dotnet build Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj --no-restore -c Release
+        dotnet build Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj --no-restore -c Release
+        dotnet build Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj     --no-restore -c Release
 
     - name: Test
-      run: >
-        dotnet test EPM.TKT.Tests/EPM.TKT.Tests.csproj --no-build -c Release
-        --verbosity normal
-        --logger "trx;LogFileName=test-results.trx"
+      run: |
+        dotnet test Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj           --no-build -c Release --logger "trx;LogFileName=AppTests.trx"
+        dotnet test Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj --no-build -c Release --logger "trx;LogFileName=ExternalTests.trx"
+        dotnet test Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj --no-build -c Release --logger "trx;LogFileName=MediatorTests.trx"
+        dotnet test Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj     --no-build -c Release --logger "trx;LogFileName=WebAPITests.trx"
 
     - name: Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: test-results
-        path: "**/*.trx"
+        path: "**/TestResults/*.trx"
