@@ -10,7 +10,8 @@ namespace EPM.TKT.Infrastructure.Repositories;
 
 internal sealed class CartRepository(
     ITKTDbContext context,
-    IPaymentServiceClient paymentServiceClient) : ICartRepository
+    IPaymentServiceClient paymentServiceClient
+) : ICartRepository
 {
     public async Task<CartModel?> GetAsync(
         Guid cartId,
@@ -70,45 +71,50 @@ internal sealed class CartRepository(
         CancellationToken ct = default
     )
     {
-        var cartExists = await context.Carts
+        return await context.ExecuteInTransactionAsync<CartModel>(async token =>
+        {
+            context.ClearChangeTracker();
+
+            var cartExists = await context.Carts
             .AnyAsync(c => c.CartId == cartId, ct);
-        
-        if (!cartExists)
-        {
-            context.Carts.Add(new Cart
+
+            if (!cartExists)
             {
-                CartId = cartId,
-                UserId = userId,
-                EventId = eventId,
-                CreatedAt = DateTime.UtcNow
-            });
-        }
+                context.Carts.Add(new Cart
+                {
+                    CartId = cartId,
+                    UserId = userId,
+                    EventId = eventId,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
 
-        var eventSeat = await context.EventSeats
-            .Where(es => es.EventId == eventId && es.VenueSeatId == venueSeatId)
-            .FirstOrDefaultAsync(ct)
-            ?? throw new InvalidOperationException($"EventSeat not found for event {eventId}, seat {venueSeatId}.");
+            var eventSeat = await context.EventSeats
+                .Where(es => es.EventId == eventId && es.VenueSeatId == venueSeatId)
+                .FirstOrDefaultAsync(ct)
+                ?? throw new InvalidOperationException($"EventSeat not found for event {eventId}, seat {venueSeatId}.");
 
-        eventSeat.PriceId ??= priceId;
+            eventSeat.PriceId ??= priceId;
 
-        var alreadyInCart = await context.CartItems
-            .AnyAsync(ci => 
-                ci.CartId == cartId && 
-                ci.EventSeatId == eventSeat.EventSeatId, 
-            ct);
+            var alreadyInCart = await context.CartItems
+                .AnyAsync(ci =>
+                    ci.CartId == cartId &&
+                    ci.EventSeatId == eventSeat.EventSeatId,
+                ct);
 
-        if (!alreadyInCart)
-        {
-            context.CartItems.Add(new CartItem
+            if (!alreadyInCart)
             {
-                CartId = cartId,
-                EventSeatId = eventSeat.EventSeatId,
-                AddedAt = DateTime.UtcNow
-            });
-        }
+                context.CartItems.Add(new CartItem
+                {
+                    CartId = cartId,
+                    EventSeatId = eventSeat.EventSeatId,
+                    AddedAt = DateTime.UtcNow
+                });
+            }
 
-        await context.SaveChangesAsync(ct);
-        return (await GetAsync(cartId, ct))!;
+            await context.SaveChangesAsync(ct);
+            return (await GetAsync(cartId, ct))!;
+        }, ct);
     }
 
     public async Task RemoveSeatAsync(
@@ -118,20 +124,17 @@ internal sealed class CartRepository(
         CancellationToken ct = default
     )
     {
-        await context.ExecuteTransactionAsync(async token =>
-        {
-            var eventSeatId = await context.EventSeats
-                .AsNoTracking()
-                .Where(es => es.EventId == eventId && es.VenueSeatId == venueSeatId)
-                .Select(es => es.EventSeatId)
-                .FirstOrDefaultAsync(token);
+        var eventSeatId = await context.EventSeats
+            .AsNoTracking()
+            .Where(es => es.EventId == eventId && es.VenueSeatId == venueSeatId)
+            .Select(es => es.EventSeatId)
+            .FirstOrDefaultAsync(ct);
 
-            if (eventSeatId == 0) return;
+        if (eventSeatId == 0) return;
 
-            await context.CartItems
-                .Where(ci => ci.CartId == cartId && ci.EventSeatId == eventSeatId)
-                .ExecuteDeleteAsync(token);
-        }, ct);
+        await context.CartItems
+            .Where(ci => ci.CartId == cartId && ci.EventSeatId == eventSeatId)
+            .ExecuteDeleteAsync(ct);
     }
 
     public async Task<Guid> BookAsync(
@@ -142,6 +145,8 @@ internal sealed class CartRepository(
     {
         var (orderId, total) = await context.ExecuteInTransactionAsync<(Guid orderId, decimal total)>(async token =>
         {
+            context.ClearChangeTracker();
+
             var cart = await context.Carts
                 .AsNoTracking()
                 .Where(c => c.CartId == cartId)
@@ -204,19 +209,25 @@ internal sealed class CartRepository(
     }
 
     private Task CancelOrderAsync(Guid orderId, Guid cartId, CancellationToken ct) =>
-        context.ExecuteTransactionAsync(async token =>
+        context.ExecuteInTransactionAsync(async token =>
         {
+            var cancelled = await context.Orders
+                .Where(o => o.OrderId == orderId
+                         && o.OrderStatusId == (byte)OrderStatusType.Pending)
+                .ExecuteUpdateAsync(s => s.SetProperty(o => o.OrderStatusId, (byte)OrderStatusType.Cancelled), token);
+
+            if (cancelled == 0) return;
+
             var seatIds = await context.CartItems
+                .AsNoTracking()
                 .Where(ci => ci.CartId == cartId)
                 .Select(ci => ci.EventSeatId)
                 .ToListAsync(token);
 
             await context.EventSeats
-                .Where(es => seatIds.Contains(es.EventSeatId))
+                .Where(es => seatIds.Contains(es.EventSeatId)
+                          && es.SeatStateId == (byte)SeatStateType.Booked)
                 .ExecuteUpdateAsync(s => s.SetProperty(es => es.SeatStateId, (byte)SeatStateType.Available), token);
 
-            await context.Orders
-                .Where(o => o.OrderId == orderId)
-                .ExecuteUpdateAsync(s => s.SetProperty(o => o.OrderStatusId, (byte)OrderStatusType.Cancelled), token);
         }, ct);
 }

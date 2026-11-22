@@ -37,7 +37,7 @@ internal interface ITKTDbContext
     DbSet<Ticket> Tickets { get; set; }
 
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default);
-    Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default);
+    Task ExecuteInTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct = default);
     Task<T> ExecuteInTransactionAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct = default);
 
     Task<int> SaveChangesAsync(CancellationToken ct = default);
