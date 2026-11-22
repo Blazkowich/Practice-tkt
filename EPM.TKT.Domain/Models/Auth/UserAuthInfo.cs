@@ -1,4 +1,4 @@
-namespace EPM.TKT.App.Models.Auth;
+namespace EPM.TKT.Domain.Models.Auth;
 
 public sealed record UserAuthInfo
 {

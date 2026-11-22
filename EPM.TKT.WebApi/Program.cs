@@ -1,13 +1,11 @@
-using System.Text;
+using EPM.TKT.App.DependencyInjections;
 using EPM.TKT.External;
 using EPM.TKT.Infrastructure.DependencyInjections;
 using EPM.TKT.WebApi.Contracts.Requests.Auth;
+using EPM.TKT.WebApi.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
-using EPM.TKT.App.DependencyInjections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,25 +18,7 @@ builder.Services.RegisterExternal();
 builder.Services.RegisterInfrastructure();
 builder.Services.RegisterApplication();
 
-var jwtSecret = builder.Configuration["Jwt:Secret"]
-    ?? throw new InvalidOperationException("Jwt:Secret is not configured.");
-
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-
-builder.Services.AddAuthorization();
+builder.Services.AddJwtAuthentication();
 
 var app = builder.Build();
 

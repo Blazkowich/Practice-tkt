@@ -1,4 +1,3 @@
-using EPM.TKT.App.Models.Auth;
 using EPM.TKT.App.Repositories;
 using EPM.TKT.Domain.Enums;
 using EPM.TKT.Domain.Models.Auth;

@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using EPM.TKT.App.Models.Auth;
+using EPM.TKT.Domain.Models.Auth;
 using EPM.TKT.Infrastructure.Entities.Sec;
 
 namespace EPM.TKT.Infrastructure.Entities.Mappings.Sec;
