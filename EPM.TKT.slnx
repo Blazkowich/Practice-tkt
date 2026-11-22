@@ -20,6 +20,7 @@
   <Folder Name="/Tests/">
     <Project Path="Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj" Id="d7baf60c-1325-47e2-abe7-54b7338b0524" />
     <Project Path="Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj" Id="23888a3f-2c5c-4620-99a7-1e4518e93273" />
+    <Project Path="Tests/EPM.TKT.InfrastructureTests/EPM.TKT.InfrastructureTests.csproj" Id="34ed500d-e8d2-404f-8715-ae9184592382" />
     <Project Path="Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj" Id="983d83b4-bc4c-42e0-b14b-7507d626a130" />
     <Project Path="Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj" Id="03f8bd87-fe5c-45e9-94d9-eb5f623bd748" />
   </Folder>
