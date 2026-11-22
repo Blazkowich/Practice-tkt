@@ -73,10 +73,8 @@ internal sealed class CartRepository(
     {
         return await context.ExecuteInTransactionAsync<CartModel>(async token =>
         {
-            context.ClearChangeTracker();
-
             var cartExists = await context.Carts
-            .AnyAsync(c => c.CartId == cartId, ct);
+                .AnyAsync(c => c.CartId == cartId, token);
 
             if (!cartExists)
             {
@@ -91,7 +89,7 @@ internal sealed class CartRepository(
 
             var eventSeat = await context.EventSeats
                 .Where(es => es.EventId == eventId && es.VenueSeatId == venueSeatId)
-                .FirstOrDefaultAsync(ct)
+                .FirstOrDefaultAsync(token)
                 ?? throw new InvalidOperationException($"EventSeat not found for event {eventId}, seat {venueSeatId}.");
 
             eventSeat.PriceId ??= priceId;
@@ -100,7 +98,7 @@ internal sealed class CartRepository(
                 .AnyAsync(ci =>
                     ci.CartId == cartId &&
                     ci.EventSeatId == eventSeat.EventSeatId,
-                ct);
+                token);
 
             if (!alreadyInCart)
             {
@@ -112,8 +110,8 @@ internal sealed class CartRepository(
                 });
             }
 
-            await context.SaveChangesAsync(ct);
-            return (await GetAsync(cartId, ct))!;
+            await context.SaveChangesAsync(token);
+            return (await GetAsync(cartId, token))!;
         }, ct);
     }
 
@@ -145,8 +143,6 @@ internal sealed class CartRepository(
     {
         var (orderId, total) = await context.ExecuteInTransactionAsync<(Guid orderId, decimal total)>(async token =>
         {
-            context.ClearChangeTracker();
-
             var cart = await context.Carts
                 .AsNoTracking()
                 .Where(c => c.CartId == cartId)
@@ -171,41 +167,48 @@ internal sealed class CartRepository(
             if (updatedSeats != eventSeatIds.Count)
                 throw new InvalidOperationException("Some seats are no longer available.");
 
-            var total = await context.EventSeats
+            var amounts = await context.EventSeats
                 .AsNoTracking()
-                .Where(es => eventSeatIds.Contains(es.EventSeatId) && es.Price != null)
-                .SumAsync(es => es.Price!.Amount, token);
+                .Where(es => eventSeatIds.Contains(es.EventSeatId))
+                .Select(es => es.Price != null ? (decimal?)es.Price.Amount : null)
+                .ToListAsync(token);
+
+            if (amounts.Any(a => a is null))
+                throw new InvalidOperationException("Some seats have no price.");
+
+            var totalAmount = amounts.Sum(a => a!.Value);
 
             var order = new Order
             {
                 CartId = cartId,
                 UserId = userId,
                 EventId = cart.EventId,
-                TotalAmount = total,
+                TotalAmount = totalAmount,
                 OrderStatusId = (byte)OrderStatusType.Pending,
                 CreatedAt = DateTime.UtcNow
             };
             context.Orders.Add(order);
             await context.SaveChangesAsync(token);
 
-            return (order.OrderId, total);
+            return (order.OrderId, totalAmount);
         }, ct);
 
+        Guid paymentId;
         try
         {
-            var paymentId = await paymentServiceClient.InitiatePaymentAsync(orderId, total, ct);
-
-            await context.Orders
-                .Where(o => o.OrderId == orderId)
-                .ExecuteUpdateAsync(s => s.SetProperty(o => o.PaymentTransactionId, paymentId.ToString()), ct);
-
-            return paymentId;
+            paymentId = await paymentServiceClient.InitiatePaymentAsync(orderId, total, ct);
         }
         catch
         {
-            await CancelOrderAsync(orderId, cartId, ct);
+            await CancelOrderAsync(orderId, cartId, CancellationToken.None);
             throw;
         }
+
+        await context.Orders
+            .Where(o => o.OrderId == orderId)
+            .ExecuteUpdateAsync(s => s.SetProperty(o => o.PaymentTransactionId, paymentId.ToString()), ct);
+
+        return paymentId;
     }
 
     private Task CancelOrderAsync(Guid orderId, Guid cartId, CancellationToken ct) =>
@@ -228,6 +231,5 @@ internal sealed class CartRepository(
                 .Where(es => seatIds.Contains(es.EventSeatId)
                           && es.SeatStateId == (byte)SeatStateType.Booked)
                 .ExecuteUpdateAsync(s => s.SetProperty(es => es.SeatStateId, (byte)SeatStateType.Available), token);
-
         }, ct);
 }

@@ -35,18 +35,21 @@ internal sealed class OfferRepository(ITKTDbContext context) : IOfferRepository
         CancellationToken ct = default
     )
     {
-        var offer = new Offer
+        return await context.ExecuteInTransactionAsync<int>(async token =>
         {
-            EventId = eventId,
-            Name = name,
-            SaleStartAt = saleStartAt,
-            SaleEndAt = saleEndAt,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow
-        };
-        context.Offers.Add(offer);
-        await context.SaveChangesAsync(ct);
-        return offer.OfferId;
+            var offer = new Offer
+            {
+                EventId = eventId,
+                Name = name,
+                SaleStartAt = saleStartAt,
+                SaleEndAt = saleEndAt,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+            context.Offers.Add(offer);
+            await context.SaveChangesAsync(token);
+            return offer.OfferId;
+        }, ct);
     }
 
     public async Task UpdateAsync(

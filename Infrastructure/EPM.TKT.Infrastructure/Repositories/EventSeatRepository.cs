@@ -34,17 +34,20 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
         CancellationToken ct = default
     )
     {
-        var seat = new EventSeat
+        return await context.ExecuteInTransactionAsync<long>(async token =>
         {
-            EventId = eventId,
-            VenueSeatId = venueSeatId,
-            PriceId = priceId,
-            SeatStateId = (byte)SeatStateType.Available,
-            CreatedAt = DateTime.UtcNow
-        };
-        context.EventSeats.Add(seat);
-        await context.SaveChangesAsync(ct);
-        return seat.EventSeatId;
+            var seat = new EventSeat
+            {
+                EventId = eventId,
+                VenueSeatId = venueSeatId,
+                PriceId = priceId,
+                SeatStateId = (byte)SeatStateType.Available,
+                CreatedAt = DateTime.UtcNow
+            };
+            context.EventSeats.Add(seat);
+            await context.SaveChangesAsync(token);
+            return seat.EventSeatId;
+        }, ct);
     }
 
     public async Task HoldAsync(

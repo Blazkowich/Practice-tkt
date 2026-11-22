@@ -17,45 +17,47 @@ internal sealed class EventRepository(ITKTDbContext context) : IEventRepository
             .ToListAsync(ct);
 
     public async Task<EventModel?> GetByIdAsync(
-        int eventId, 
+        int eventId,
         CancellationToken ct = default
-    )
-        => await context.Events
+    ) => await context.Events
             .AsNoTracking()
             .Where(e => e.EventId == eventId)
             .MapToDomainModel()
             .FirstOrDefaultAsync(ct);
 
     public async Task<int> CreateAsync(
-        int venueId, 
-        string name, 
-        string? description, 
-        DateTime eventDate, 
+        int venueId,
+        string name,
+        string? description,
+        DateTime eventDate,
         DateTime? doorsOpenAt,
         EventStatusType eventStatus,
         CancellationToken ct = default
     )
     {
-        var ev = new Event
+        return await context.ExecuteInTransactionAsync<int>(async token =>
         {
-            VenueId = venueId,
-            Name = name,
-            Description = description,
-            EventDate = eventDate,
-            DoorsOpenAt = doorsOpenAt,
-            EventStatusId = (byte)eventStatus,
-            CreatedAt = DateTime.UtcNow
-        };
-        context.Events.Add(ev);
-        await context.SaveChangesAsync(ct);
-        return ev.EventId;
+            var ev = new Event
+            {
+                VenueId = venueId,
+                Name = name,
+                Description = description,
+                EventDate = eventDate,
+                DoorsOpenAt = doorsOpenAt,
+                EventStatusId = (byte)eventStatus,
+                CreatedAt = DateTime.UtcNow
+            };
+            context.Events.Add(ev);
+            await context.SaveChangesAsync(token);
+            return ev.EventId;
+        }, ct);
     }
 
     public async Task UpdateAsync(
-        int eventId, 
-        string name, 
-        string? description, 
-        DateTime eventDate, 
+        int eventId,
+        string name,
+        string? description,
+        DateTime eventDate,
         DateTime? doorsOpenAt,
         EventStatusType eventStatus,
         CancellationToken ct = default
@@ -69,26 +71,24 @@ internal sealed class EventRepository(ITKTDbContext context) : IEventRepository
                 .SetProperty(x => x.EventStatusId, (byte)eventStatus), ct);
 
     public async Task DeleteAsync(
-        int eventId, 
+        int eventId,
         CancellationToken ct = default
     ) => await context.Events
             .Where(e => e.EventId == eventId)
             .ExecuteDeleteAsync(ct);
 
     public async Task<IReadOnlyList<SeatAvailabilityModel>> GetSeatsAsync(
-        int eventId, 
-        int sectionId, 
+        int eventId,
+        int sectionId,
         CancellationToken ct = default
     )
     {
-        // Load active offer IDs for this event
         var offerIds = await context.Offers
             .AsNoTracking()
             .Where(o => o.EventId == eventId && o.IsActive)
             .Select(o => o.OfferId)
             .ToListAsync(ct);
 
-        // Load price options scoped to the section (or global = null SectionId)
         var priceOptions = await context.Prices
             .AsNoTracking()
             .Where(p => offerIds.Contains(p.OfferId)

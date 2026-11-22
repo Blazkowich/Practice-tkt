@@ -32,34 +32,36 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<Guid> CreateUserAsync(
-        string email, 
-        string passwordHash, 
-        string? firstName, 
-        string? lastName, 
+        string email,
+        string passwordHash,
+        string? firstName,
+        string? lastName,
         CancellationToken ct = default
     )
     {
-        var user = new User
+        return await context.ExecuteInTransactionAsync<Guid>(async token =>
         {
-            Email = email,
-            PasswordHash = passwordHash,
-            FirstName = firstName,
-            LastName = lastName,
-            CreatedAt = DateTime.UtcNow,
-            IsActive = true
-        };
-        context.Users.Add(user);
+            var user = new User
+            {
+                Email = email,
+                PasswordHash = passwordHash,
+                FirstName = firstName,
+                LastName = lastName,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+            context.Users.Add(user);
 
-        context.UserRoles.Add(
-            new UserRole { 
-                UserId = user.UserId, 
-                RoleId = (byte)RoleType.User, 
-                AssignedAt = DateTime.UtcNow 
-            }
-        );
+            context.UserRoles.Add(new UserRole
+            {
+                UserId = user.UserId,
+                RoleId = (byte)RoleType.User,
+                AssignedAt = DateTime.UtcNow
+            });
 
-        await context.SaveChangesAsync(ct);
-        return user.UserId;
+            await context.SaveChangesAsync(token);
+            return user.UserId;
+        }, ct);
     }
 
     public async Task UpdatePasswordAsync(

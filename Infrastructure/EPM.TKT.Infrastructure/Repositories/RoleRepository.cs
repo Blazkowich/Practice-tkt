@@ -42,19 +42,22 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
         CancellationToken ct = default
     )
     {
-        var exists = await context.UserRoles
-            .AnyAsync(ur => ur.UserId == userId && ur.RoleId == (byte)roleType, ct);
-
-        if (!exists)
+        await context.ExecuteTransactionAsync(async token =>
         {
-            context.UserRoles.Add(new UserRole
+            var exists = await context.UserRoles
+                .AnyAsync(ur => ur.UserId == userId && ur.RoleId == (byte)roleType, token);
+
+            if (!exists)
             {
-                UserId = userId,
-                RoleId = (byte)roleType,
-                AssignedAt = DateTime.UtcNow
-            });
-            await context.SaveChangesAsync(ct);
-        }
+                context.UserRoles.Add(new UserRole
+                {
+                    UserId = userId,
+                    RoleId = (byte)roleType,
+                    AssignedAt = DateTime.UtcNow
+                });
+                await context.SaveChangesAsync(token);
+            }
+        }, ct);
     }
 
     public async Task RemoveRoleAsync(
