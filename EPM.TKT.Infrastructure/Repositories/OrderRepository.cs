@@ -8,22 +8,32 @@ namespace EPM.TKT.Infrastructure.Repositories;
 
 internal sealed class OrderRepository(ITKTDbContext context) : IOrderRepository
 {
-    public async Task<OrderModel?> GetByIdAsync(Guid orderId, CancellationToken ct = default)
-        => await context.Orders
+    public async Task<OrderModel?> GetByIdAsync(
+        Guid orderId, 
+        CancellationToken ct = default
+    ) => await context.Orders
             .AsNoTracking()
             .Where(o => o.OrderId == orderId)
             .MapToDomainModel()
             .FirstOrDefaultAsync(ct);
 
-    public async Task<IReadOnlyList<OrderModel>> GetByUserAsync(Guid userId, CancellationToken ct = default)
-        => await context.Orders
+    public async Task<IReadOnlyList<OrderModel>> GetByUserAsync(
+        Guid userId, 
+        CancellationToken ct = default
+    ) => await context.Orders
             .AsNoTracking()
             .Where(o => o.UserId == userId)
             .OrderByDescending(o => o.CreatedAt)
             .MapToDomainModel()
             .ToListAsync(ct);
 
-    public async Task<Guid> CreateAsync(Guid userId, int eventId, Guid cartId, decimal totalAmount, CancellationToken ct = default)
+    public async Task<Guid> CreateAsync(
+        Guid userId, 
+        int eventId, 
+        Guid cartId, 
+        decimal totalAmount, 
+        CancellationToken ct = default
+    )
     {
         var order = new Order
         {
@@ -38,8 +48,11 @@ internal sealed class OrderRepository(ITKTDbContext context) : IOrderRepository
         return order.OrderId;
     }
 
-    public async Task UpdatePaymentTransactionAsync(Guid orderId, string paymentTransactionId, CancellationToken ct = default)
-        => await context.Orders
+    public async Task UpdatePaymentTransactionAsync(
+        Guid orderId, 
+        string paymentTransactionId, 
+        CancellationToken ct = default
+    ) => await context.Orders
             .Where(o => o.OrderId == orderId)
             .ExecuteUpdateAsync(s => s
                 .SetProperty(x => x.PaymentTransactionId, paymentTransactionId), ct);

@@ -8,29 +8,43 @@ namespace EPM.TKT.Infrastructure.Repositories;
 
 internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepository
 {
-    public async Task<TicketModel?> GetByIdAsync(Guid ticketId, CancellationToken ct = default)
-        => await context.Tickets
+    public async Task<TicketModel?> GetByIdAsync(
+        Guid ticketId, 
+        CancellationToken ct = default
+    ) => await context.Tickets
             .AsNoTracking()
             .Where(t => t.TicketId == ticketId)
             .MapToDomainModel()
             .FirstOrDefaultAsync(ct);
 
-    public async Task<IReadOnlyList<TicketModel>> GetByOrderAsync(Guid orderId, CancellationToken ct = default)
-        => await context.Tickets
+    public async Task<IReadOnlyList<TicketModel>> GetByOrderAsync(
+        Guid orderId, 
+        CancellationToken ct = default
+    ) => await context.Tickets
             .AsNoTracking()
             .Where(t => t.OrderId == orderId)
             .MapToDomainModel()
             .ToListAsync(ct);
 
-    public async Task<IReadOnlyList<TicketModel>> GetByUserAsync(Guid userId, CancellationToken ct = default)
-        => await context.Tickets
+    public async Task<IReadOnlyList<TicketModel>> GetByUserAsync(
+        Guid userId, 
+        CancellationToken ct = default
+    ) => await context.Tickets
             .AsNoTracking()
             .Where(t => t.UserId == userId)
             .OrderByDescending(t => t.IssuedAt)
             .MapToDomainModel()
             .ToListAsync(ct);
 
-    public async Task<Guid> CreateAsync(Guid orderId, int eventId, long eventSeatId, Guid userId, int priceId, decimal paidAmount, CancellationToken ct = default)
+    public async Task<Guid> CreateAsync(
+        Guid orderId, 
+        int eventId, 
+        long eventSeatId, 
+        Guid userId, 
+        int priceId, 
+        decimal paidAmount, 
+        CancellationToken ct = default
+    )
     {
         var ticket = new Ticket
         {
@@ -47,8 +61,11 @@ internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepositor
         return ticket.TicketId;
     }
 
-    public async Task CancelAsync(Guid ticketId, Guid cancelledByManagerId, CancellationToken ct = default)
-        => await context.Tickets
+    public async Task CancelAsync(
+        Guid ticketId, 
+        Guid cancelledByManagerId, 
+        CancellationToken ct = default
+    ) => await context.Tickets
             .Where(t => t.TicketId == ticketId)
             .ExecuteUpdateAsync(s => s
                 .SetProperty(x => x.CancelledAt, DateTime.UtcNow)

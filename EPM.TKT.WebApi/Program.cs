@@ -1,14 +1,13 @@
 using System.Text;
 using EPM.TKT.External;
 using EPM.TKT.Infrastructure.DependencyInjections;
-using EPM.TKT.Mediator.DependencyInjection;
-using EPM.TKT.App;
 using EPM.TKT.WebApi.Contracts.Requests.Auth;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using EPM.TKT.App.DependencyInjections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +18,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.RegisterExternal();
 builder.Services.RegisterInfrastructure();
-builder.Services.AddMediator<AppAssemblyMarker>();
+builder.Services.RegisterApplication();
 
 var jwtSecret = builder.Configuration["Jwt:Secret"]
     ?? throw new InvalidOperationException("Jwt:Secret is not configured.");

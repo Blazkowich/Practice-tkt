@@ -3,6 +3,7 @@ using EPM.TKT.Domain.Models.Event;
 using EPM.TKT.Infrastructure.Entities.Mappings.Tkt;
 using EPM.TKT.Infrastructure.Entities.Tkt;
 using Microsoft.EntityFrameworkCore;
+using EventStatusType = EPM.TKT.Domain.Enums.EventStatus;
 
 namespace EPM.TKT.Infrastructure.Repositories;
 
@@ -15,14 +16,25 @@ internal sealed class EventRepository(ITKTDbContext context) : IEventRepository
             .MapToDomainModel()
             .ToListAsync(ct);
 
-    public async Task<EventModel?> GetByIdAsync(int eventId, CancellationToken ct = default)
+    public async Task<EventModel?> GetByIdAsync(
+        int eventId, 
+        CancellationToken ct = default
+    )
         => await context.Events
             .AsNoTracking()
             .Where(e => e.EventId == eventId)
             .MapToDomainModel()
             .FirstOrDefaultAsync(ct);
 
-    public async Task<int> CreateAsync(int venueId, string name, string? description, DateTime eventDate, DateTime? doorsOpenAt, byte eventStatusId, CancellationToken ct = default)
+    public async Task<int> CreateAsync(
+        int venueId, 
+        string name, 
+        string? description, 
+        DateTime eventDate, 
+        DateTime? doorsOpenAt,
+        EventStatusType eventStatus,
+        CancellationToken ct = default
+    )
     {
         var ev = new Event
         {
@@ -31,7 +43,7 @@ internal sealed class EventRepository(ITKTDbContext context) : IEventRepository
             Description = description,
             EventDate = eventDate,
             DoorsOpenAt = doorsOpenAt,
-            EventStatusId = eventStatusId,
+            EventStatusId = (byte)eventStatus,
             CreatedAt = DateTime.UtcNow
         };
         context.Events.Add(ev);
@@ -39,23 +51,35 @@ internal sealed class EventRepository(ITKTDbContext context) : IEventRepository
         return ev.EventId;
     }
 
-    public async Task UpdateAsync(int eventId, string name, string? description, DateTime eventDate, DateTime? doorsOpenAt, byte eventStatusId, CancellationToken ct = default)
-        => await context.Events
+    public async Task UpdateAsync(
+        int eventId, 
+        string name, 
+        string? description, 
+        DateTime eventDate, 
+        DateTime? doorsOpenAt,
+        EventStatusType eventStatus,
+        CancellationToken ct = default
+    ) => await context.Events
             .Where(e => e.EventId == eventId)
             .ExecuteUpdateAsync(s => s
                 .SetProperty(x => x.Name, name)
                 .SetProperty(x => x.Description, description)
                 .SetProperty(x => x.EventDate, eventDate)
                 .SetProperty(x => x.DoorsOpenAt, doorsOpenAt)
-                .SetProperty(x => x.EventStatusId, eventStatusId), ct);
+                .SetProperty(x => x.EventStatusId, (byte)eventStatus), ct);
 
-    public async Task DeleteAsync(int eventId, CancellationToken ct = default)
-        => await context.Events
+    public async Task DeleteAsync(
+        int eventId, 
+        CancellationToken ct = default
+    ) => await context.Events
             .Where(e => e.EventId == eventId)
             .ExecuteDeleteAsync(ct);
 
     public async Task<IReadOnlyList<SeatAvailabilityModel>> GetSeatsAsync(
-        int eventId, int sectionId, CancellationToken ct = default)
+        int eventId, 
+        int sectionId, 
+        CancellationToken ct = default
+    )
     {
         // Load active offer IDs for this event
         var offerIds = await context.Offers

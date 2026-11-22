@@ -4,5 +4,5 @@ public enum SeatState
 {
     Available = 1,
     Booked = 2,
-    Locked = 3
+    Sold = 3
 }

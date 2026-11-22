@@ -1,4 +1,4 @@
-using EPM.TKT.Infrastructure.Options;
+using EPM.TKT.Domain.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

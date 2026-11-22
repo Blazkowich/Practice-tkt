@@ -1,4 +1,4 @@
-﻿namespace EPM.TKT.Infrastructure.Options;
+﻿namespace EPM.TKT.Domain.Options;
 
 public sealed class JwtOptions
 {

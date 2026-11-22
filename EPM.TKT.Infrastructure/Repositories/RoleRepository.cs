@@ -1,4 +1,5 @@
 using EPM.TKT.App.Repositories;
+using EPM.TKT.Domain.Enums;
 using EPM.TKT.Domain.Models.Auth;
 using EPM.TKT.Infrastructure.Entities.Mappings.Sec;
 using EPM.TKT.Infrastructure.Entities.Sec;
@@ -15,14 +16,19 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
             .MapToDomainModel()
             .ToListAsync(ct);
 
-    public async Task<RoleModel?> GetByIdAsync(byte roleId, CancellationToken ct = default)
-        => await context.Roles
+    public async Task<RoleModel?> GetByIdAsync(
+        RoleType roleType, 
+        CancellationToken ct = default
+    ) => await context.Roles
             .AsNoTracking()
-            .Where(r => r.RoleId == roleId)
+            .Where(r => r.RoleId == (byte)roleType)
             .MapToDomainModel()
             .FirstOrDefaultAsync(ct);
 
-    public async Task<IReadOnlyList<RoleModel>> GetUserRolesAsync(Guid userId, CancellationToken ct = default)
+    public async Task<IReadOnlyList<RoleModel>> GetUserRolesAsync(
+        Guid userId, 
+        CancellationToken ct = default
+    )
         => await context.UserRoles
             .AsNoTracking()
             .Where(ur => ur.UserId == userId)
@@ -30,25 +36,32 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
             .MapToDomainModel()
             .ToListAsync(ct);
 
-    public async Task AssignRoleAsync(Guid userId, byte roleId, CancellationToken ct = default)
+    public async Task AssignRoleAsync(
+        Guid userId,
+        RoleType roleType,
+        CancellationToken ct = default
+    )
     {
         var exists = await context.UserRoles
-            .AnyAsync(ur => ur.UserId == userId && ur.RoleId == roleId, ct);
+            .AnyAsync(ur => ur.UserId == userId && ur.RoleId == (byte)roleType, ct);
 
         if (!exists)
         {
             context.UserRoles.Add(new UserRole
             {
                 UserId = userId,
-                RoleId = roleId,
+                RoleId = (byte)roleType,
                 AssignedAt = DateTime.UtcNow
             });
             await context.SaveChangesAsync(ct);
         }
     }
 
-    public async Task RemoveRoleAsync(Guid userId, byte roleId, CancellationToken ct = default)
-        => await context.UserRoles
-            .Where(ur => ur.UserId == userId && ur.RoleId == roleId)
+    public async Task RemoveRoleAsync(
+        Guid userId, 
+        RoleType roleType, 
+        CancellationToken ct = default
+    ) => await context.UserRoles
+            .Where(ur => ur.UserId == userId && ur.RoleId == (byte)roleType)
             .ExecuteDeleteAsync(ct);
 }

@@ -1,5 +1,6 @@
 using EPM.TKT.App.Models.Auth;
 using EPM.TKT.App.Repositories;
+using EPM.TKT.Domain.Enums;
 using EPM.TKT.Domain.Models.Auth;
 using EPM.TKT.Infrastructure.Entities.Mappings.Sec;
 using EPM.TKT.Infrastructure.Entities.Sec;
@@ -9,24 +10,35 @@ namespace EPM.TKT.Infrastructure.Repositories;
 
 internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
 {
-    public Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
-        => context.Users.AnyAsync(u => u.Email == email, cancellationToken);
+    public Task<bool> EmailExistsAsync(
+        string email, CancellationToken ct = default
+        ) => context.Users.AnyAsync(u => u.Email == email, ct);
 
-    public async Task<UserAuthInfo?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
-        => await context.Users
+    public async Task<UserAuthInfo?> GetByEmailAsync(
+        string email, 
+        CancellationToken ct = default
+    ) => await context.Users
             .AsNoTracking()
             .Where(u => u.Email == email)
             .MapToAuthInfo(context.UserRoles, context.Roles)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(ct);
 
-    public async Task<UserAuthInfo?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
-        => await context.Users
+    public async Task<UserAuthInfo?> GetByIdAsync(
+        Guid userId, 
+        CancellationToken ct = default
+    ) => await context.Users
             .AsNoTracking()
             .Where(u => u.UserId == userId)
             .MapToAuthInfo(context.UserRoles, context.Roles)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(ct);
 
-    public async Task<Guid> CreateUserAsync(string email, string passwordHash, string? firstName, string? lastName, CancellationToken cancellationToken = default)
+    public async Task<Guid> CreateUserAsync(
+        string email, 
+        string passwordHash, 
+        string? firstName, 
+        string? lastName, 
+        CancellationToken ct = default
+    )
     {
         var user = new User
         {
@@ -38,25 +50,38 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
             IsActive = true
         };
         context.Users.Add(user);
-        context.UserRoles.Add(new UserRole { UserId = user.UserId, RoleId = 1, AssignedAt = DateTime.UtcNow });
-        await context.SaveChangesAsync(cancellationToken);
+
+        context.UserRoles.Add(
+            new UserRole { 
+                UserId = user.UserId, 
+                RoleId = (byte)RoleType.User, 
+                AssignedAt = DateTime.UtcNow 
+            }
+        );
+
+        await context.SaveChangesAsync(ct);
         return user.UserId;
     }
 
-    public async Task UpdatePasswordAsync(Guid userId, string passwordHash, CancellationToken cancellationToken = default)
-        => await context.Users
+    public async Task UpdatePasswordAsync(
+        Guid userId, 
+        string passwordHash, 
+        CancellationToken ct = default
+    ) => await context.Users
             .Where(u => u.UserId == userId)
-            .ExecuteUpdateAsync(s => s.SetProperty(u => u.PasswordHash, passwordHash), cancellationToken);
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.PasswordHash, passwordHash), ct);
 
-    public async Task<IReadOnlyList<UserModel>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<UserModel>> GetAllAsync(CancellationToken ct = default)
         => await context.Users
             .AsNoTracking()
             .OrderBy(u => u.Email)
             .MapToUserModel()
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
 
-    public async Task DeactivateAsync(Guid userId, CancellationToken cancellationToken = default)
-        => await context.Users
+    public async Task DeactivateAsync(
+        Guid userId, 
+        CancellationToken ct = default
+    ) => await context.Users
             .Where(u => u.UserId == userId)
-            .ExecuteUpdateAsync(s => s.SetProperty(u => u.IsActive, false), cancellationToken);
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.IsActive, false), ct);
 }

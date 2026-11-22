@@ -70,7 +70,9 @@ internal sealed class CartRepository(
         CancellationToken ct = default
     )
     {
-        var cartExists = await context.Carts.AnyAsync(c => c.CartId == cartId, ct);
+        var cartExists = await context.Carts
+            .AnyAsync(c => c.CartId == cartId, ct);
+        
         if (!cartExists)
         {
             context.Carts.Add(new Cart
@@ -90,7 +92,10 @@ internal sealed class CartRepository(
         eventSeat.PriceId ??= priceId;
 
         var alreadyInCart = await context.CartItems
-            .AnyAsync(ci => ci.CartId == cartId && ci.EventSeatId == eventSeat.EventSeatId, ct);
+            .AnyAsync(ci => 
+                ci.CartId == cartId && 
+                ci.EventSeatId == eventSeat.EventSeatId, 
+            ct);
 
         if (!alreadyInCart)
         {
