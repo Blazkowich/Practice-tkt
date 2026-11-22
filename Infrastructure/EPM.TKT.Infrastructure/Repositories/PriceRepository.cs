@@ -10,7 +10,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class PriceRepository(ITKTDbContext context) : IPriceRepository
 {
     public async Task<IReadOnlyList<PriceModel>> GetAllAsync(
-        int offerId, 
+        int offerId,
         CancellationToken ct = default
     ) => await context.Prices
             .AsNoTracking()
@@ -19,7 +19,7 @@ internal sealed class PriceRepository(ITKTDbContext context) : IPriceRepository
             .ToListAsync(ct);
 
     public async Task<PriceModel?> GetByIdAsync(
-        int priceId, 
+        int priceId,
         CancellationToken ct = default
     ) => await context.Prices
             .AsNoTracking()
@@ -28,12 +28,12 @@ internal sealed class PriceRepository(ITKTDbContext context) : IPriceRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<int> CreateAsync(
-        int offerId, 
-        int? sectionId, 
-        int? rowId, 
-        PriceCategoryType priceCategory, 
-        decimal amount, 
-        string currency, 
+        int offerId,
+        int? sectionId,
+        int? rowId,
+        PriceCategoryType priceCategory,
+        decimal amount,
+        string currency,
         CancellationToken ct = default
     )
     {
@@ -52,9 +52,9 @@ internal sealed class PriceRepository(ITKTDbContext context) : IPriceRepository
     }
 
     public async Task UpdateAsync(
-        int priceId, 
-        decimal amount, 
-        string currency, 
+        int priceId,
+        decimal amount,
+        string currency,
         CancellationToken ct = default
     ) => await context.Prices
             .Where(p => p.PriceId == priceId)
@@ -63,7 +63,7 @@ internal sealed class PriceRepository(ITKTDbContext context) : IPriceRepository
                 .SetProperty(x => x.Currency, currency), ct);
 
     public async Task DeleteAsync(
-        int priceId, 
+        int priceId,
         CancellationToken ct = default
     ) => await context.Prices
             .Where(p => p.PriceId == priceId)

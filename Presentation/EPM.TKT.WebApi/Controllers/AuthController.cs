@@ -29,9 +29,9 @@ public sealed class AuthController(ISender sender) : ControllerBase
     {
         var result = await sender.SendAsync(
             new RegisterCommand(
-                    request.Email, 
-                    request.Password, 
-                    request.FirstName, 
+                    request.Email,
+                    request.Password,
+                    request.FirstName,
                     request.LastName
                 ), ct);
 

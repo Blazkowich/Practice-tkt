@@ -9,23 +9,23 @@ internal static class ArchitectureConfig
 {
     // ── Assembly names ────────────────────────────────────────────────────────
     // Must match the AssemblyName (or project file name) of each referenced project.
-    internal const string DomainAssembly         = "EPM.TKT.Domain";
-    internal const string AppAssembly            = "EPM.TKT.App";
+    internal const string DomainAssembly = "EPM.TKT.Domain";
+    internal const string AppAssembly = "EPM.TKT.App";
     internal const string InfrastructureAssembly = "EPM.TKT.Infrastructure";
-    internal const string WebApiAssembly         = "EPM.TKT.WebApi";
+    internal const string WebApiAssembly = "EPM.TKT.WebApi";
 
     // ── Layer namespace roots ─────────────────────────────────────────────────
-    internal const string DomainNs         = "EPM.TKT.Domain";
-    internal const string AppNs            = "EPM.TKT.App";
+    internal const string DomainNs = "EPM.TKT.Domain";
+    internal const string AppNs = "EPM.TKT.App";
     internal const string InfrastructureNs = "EPM.TKT.Infrastructure";
-    internal const string ExternalNs       = "EPM.TKT.External";
-    internal const string WebApiNs         = "EPM.TKT.WebApi";
+    internal const string ExternalNs = "EPM.TKT.External";
+    internal const string WebApiNs = "EPM.TKT.WebApi";
 
     // ── Sub-namespace patterns ────────────────────────────────────────────────
-    internal const string DomainModelsNs      = DomainNs         + ".Models";
-    internal const string AppUseCasesNs       = AppNs            + ".UseCases";
-    internal const string AppRepositoriesNs   = AppNs            + ".Repositories";
-    internal const string AppServicesNs       = AppNs            + ".Services";
+    internal const string DomainModelsNs = DomainNs + ".Models";
+    internal const string AppUseCasesNs = AppNs + ".UseCases";
+    internal const string AppRepositoriesNs = AppNs + ".Repositories";
+    internal const string AppServicesNs = AppNs + ".Services";
     internal const string InfraRepositoriesNs = InfrastructureNs + ".Repositories";
-    internal const string WebApiControllersNs = WebApiNs         + ".Controllers";
+    internal const string WebApiControllersNs = WebApiNs + ".Controllers";
 }

@@ -23,18 +23,24 @@ jobs:
 
     - name: Build
       run: |
-        dotnet build Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj        --no-restore -c Release
-        dotnet build Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj           --no-restore -c Release
-        dotnet build Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj --no-restore -c Release
-        dotnet build Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj --no-restore -c Release
-        dotnet build Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj     --no-restore -c Release
+        dotnet build Presentation/EPM.TKT.WebApi/EPM.TKT.WebApi.csproj                      --no-restore -c Release
+        dotnet build Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj                         --no-restore -c Release
+        dotnet build Tests/EPM.TKT.ArchitectureTests/EPM.TKT.ArchitectureTests.csproj       --no-restore -c Release
+        dotnet build Tests/EPM.TKT.InfrastructureTests/EPM.TKT.InfrastructureTests.csproj   --no-restore -c Release
+        dotnet build Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj               --no-restore -c Release
+        dotnet build Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj               --no-restore -c Release
+        dotnet build Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                   --no-restore -c Release
+        dotnet build Tests/EPM.TKT.IntegrationTests/EPM.TKT.IntegrationTests.csproj         --no-restore -c Release
 
     - name: Test
       run: |
-        dotnet test Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj           --no-build -c Release --logger "trx;LogFileName=AppTests.trx"
-        dotnet test Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj --no-build -c Release --logger "trx;LogFileName=ExternalTests.trx"
-        dotnet test Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj --no-build -c Release --logger "trx;LogFileName=MediatorTests.trx"
-        dotnet test Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj     --no-build -c Release --logger "trx;LogFileName=WebAPITests.trx"
+        dotnet test Tests/EPM.TKT.AppTests/EPM.TKT.AppTests.csproj                         --no-build -c Release --logger "trx;LogFileName=AppTests.trx"
+        dotnet test Tests/EPM.TKT.ArchitectureTests/EPM.TKT.ArchitectureTests.csproj       --no-build -c Release --logger "trx;LogFileName=ArchitectureTests.trx"
+        dotnet test Tests/EPM.TKT.InfrastructureTests/EPM.TKT.InfrastructureTests.csproj   --no-build -c Release --logger "trx;LogFileName=InfrastructureTests.trx"
+        dotnet test Tests/EPM.TKT.ExternalTests/EPM.TKT.ExternalTests.csproj               --no-build -c Release --logger "trx;LogFileName=ExternalTests.trx"
+        dotnet test Tests/EPM.TKT.MediatorTests/EPM.TKT.MediatorTests.csproj               --no-build -c Release --logger "trx;LogFileName=MediatorTests.trx"
+        dotnet test Tests/EPM.TKT.WebAPITests/EPM.TKT.WebAPITests.csproj                   --no-build -c Release --logger "trx;LogFileName=WebAPITests.trx"
+        dotnet test Tests/EPM.TKT.IntegrationTests/EPM.TKT.IntegrationTests.csproj         --no-build -c Release --logger "trx;LogFileName=IntegrationTests.trx"
 
     - name: Upload test results
       uses: actions/upload-artifact@v5

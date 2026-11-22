@@ -7,11 +7,11 @@ public interface IRoleRepository
 {
     Task<IReadOnlyList<RoleModel>> GetAllAsync(CancellationToken ct = default);
     Task<RoleModel?> GetByIdAsync(
-        RoleType roleType, 
+        RoleType roleType,
         CancellationToken ct = default
     );
     Task<IReadOnlyList<RoleModel>> GetUserRolesAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken ct = default
     );
     Task AssignRoleAsync(

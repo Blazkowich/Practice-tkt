@@ -105,8 +105,8 @@ public sealed class NamingConventionTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(noService.IsSuccessful,    Is.True, "Domain types must not end with 'Service'.");
-            Assert.That(noRepo.IsSuccessful,       Is.True, "Domain types must not end with 'Repository'.");
+            Assert.That(noService.IsSuccessful, Is.True, "Domain types must not end with 'Service'.");
+            Assert.That(noRepo.IsSuccessful, Is.True, "Domain types must not end with 'Repository'.");
             Assert.That(noController.IsSuccessful, Is.True, "Domain types must not end with 'Controller'.");
         });
     }

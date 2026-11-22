@@ -16,7 +16,7 @@ internal sealed class VenueRepository(ITKTDbContext context) : IVenueRepository
             .ToListAsync(ct);
 
     public async Task<VenueModel?> GetByIdAsync(
-        int venueId, 
+        int venueId,
         CancellationToken ct = default
     ) => await context.Venues
             .AsNoTracking()
@@ -25,10 +25,10 @@ internal sealed class VenueRepository(ITKTDbContext context) : IVenueRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<int> CreateAsync(
-        string name, 
-        string? address, 
-        string? city, 
-        string? country, 
+        string name,
+        string? address,
+        string? city,
+        string? country,
         CancellationToken ct = default
     )
     {
@@ -47,11 +47,11 @@ internal sealed class VenueRepository(ITKTDbContext context) : IVenueRepository
     }
 
     public async Task UpdateAsync(
-        int venueId, 
-        string name, 
-        string? address, 
-        string? city, 
-        string? country, 
+        int venueId,
+        string name,
+        string? address,
+        string? city,
+        string? country,
         CancellationToken ct = default
     ) => await context.Venues
             .Where(v => v.VenueId == venueId)
@@ -62,14 +62,14 @@ internal sealed class VenueRepository(ITKTDbContext context) : IVenueRepository
                 .SetProperty(x => x.Country, country), ct);
 
     public async Task DeactivateAsync(
-        int venueId, 
+        int venueId,
         CancellationToken ct = default
     ) => await context.Venues
             .Where(v => v.VenueId == venueId)
             .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsActive, false), ct);
 
     public async Task<IReadOnlyList<SectionModel>> GetSectionsAsync(
-        int venueId, 
+        int venueId,
         CancellationToken ct = default
     ) => await context.Sections
             .AsNoTracking()

@@ -14,7 +14,7 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
         ) => context.Users.AnyAsync(u => u.Email == email, ct);
 
     public async Task<UserAuthInfo?> GetByEmailAsync(
-        string email, 
+        string email,
         CancellationToken ct = default
     ) => await context.Users
             .AsNoTracking()
@@ -23,7 +23,7 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<UserAuthInfo?> GetByIdAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken ct = default
     ) => await context.Users
             .AsNoTracking()
@@ -65,8 +65,8 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
     }
 
     public async Task UpdatePasswordAsync(
-        Guid userId, 
-        string passwordHash, 
+        Guid userId,
+        string passwordHash,
         CancellationToken ct = default
     ) => await context.Users
             .Where(u => u.UserId == userId)
@@ -80,7 +80,7 @@ internal sealed class UserRepository(ITKTDbContext context) : IUserRepository
             .ToListAsync(ct);
 
     public async Task DeactivateAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken ct = default
     ) => await context.Users
             .Where(u => u.UserId == userId)

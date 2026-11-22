@@ -10,7 +10,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRepository
 {
     public async Task<IReadOnlyList<EventSeatModel>> GetAllAsync(
-        int eventId, 
+        int eventId,
         CancellationToken ct = default
     ) => await context.EventSeats
             .AsNoTracking()
@@ -19,7 +19,7 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
             .ToListAsync(ct);
 
     public async Task<EventSeatModel?> GetByIdAsync(
-        long eventSeatId, 
+        long eventSeatId,
         CancellationToken ct = default
     ) => await context.EventSeats
             .AsNoTracking()
@@ -28,9 +28,9 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
             .FirstOrDefaultAsync(ct);
 
     public async Task<long> CreateAsync(
-        int eventId, 
-        int venueSeatId, 
-        int? priceId, 
+        int eventId,
+        int venueSeatId,
+        int? priceId,
         CancellationToken ct = default
     )
     {
@@ -51,9 +51,9 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
     }
 
     public async Task HoldAsync(
-        long eventSeatId, 
-        Guid userId, 
-        DateTime holdUntil, 
+        long eventSeatId,
+        Guid userId,
+        DateTime holdUntil,
         CancellationToken ct = default
     )
         => await context.EventSeats
@@ -64,7 +64,7 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
                 .SetProperty(x => x.HoldUntil, holdUntil), ct);
 
     public async Task ReleaseAsync(
-        long eventSeatId, 
+        long eventSeatId,
         CancellationToken ct = default
     )
         => await context.EventSeats
@@ -75,8 +75,8 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
                 .SetProperty(x => x.HoldUntil, (DateTime?)null), ct);
 
     public async Task UpdateStateAsync(
-        long eventSeatId, 
-        SeatStateType seatState, 
+        long eventSeatId,
+        SeatStateType seatState,
         CancellationToken ct = default
     ) => await context.EventSeats
             .Where(es => es.EventSeatId == eventSeatId)
@@ -84,7 +84,7 @@ internal sealed class EventSeatRepository(ITKTDbContext context) : IEventSeatRep
                 .SetProperty(x => x.SeatStateId, (byte)seatState), ct);
 
     public async Task DeleteAsync(
-        long eventSeatId, 
+        long eventSeatId,
         CancellationToken ct = default
     ) => await context.EventSeats
             .Where(es => es.EventSeatId == eventSeatId)

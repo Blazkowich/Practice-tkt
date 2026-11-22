@@ -10,14 +10,14 @@ namespace EPM.TKT.InfrastructureTests.Repositories;
 [TestFixture]
 public sealed class TicketRepositoryTests
 {
-    private Mock<ITKTDbContext>  _context     = null!;
-    private Mock<DbSet<Ticket>> _mockTickets  = null!;
-    private TicketRepository    _repo         = null!;
+    private Mock<ITKTDbContext> _context = null!;
+    private Mock<DbSet<Ticket>> _mockTickets = null!;
+    private TicketRepository _repo = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _context     = new Mock<ITKTDbContext>();
+        _context = new Mock<ITKTDbContext>();
         _mockTickets = MockDbSet.Create<Ticket>();
 
         _context.Setup(c => c.Tickets).Returns(_mockTickets.Object);
@@ -31,12 +31,12 @@ public sealed class TicketRepositoryTests
     [Test]
     public async Task CreateAsync_AddsTicket_WithCorrectFields()
     {
-        var orderId     = Guid.NewGuid();
-        var userId      = Guid.NewGuid();
-        const int eventId     = 5;
+        var orderId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        const int eventId = 5;
         const long eventSeatId = 42L;
-        const int priceId     = 3;
-        const decimal paid    = 75.00m;
+        const int priceId = 3;
+        const decimal paid = 75.00m;
 
         Ticket? captured = null;
         _mockTickets.Setup(d => d.Add(It.IsAny<Ticket>()))
@@ -44,14 +44,14 @@ public sealed class TicketRepositoryTests
 
         await _repo.CreateAsync(orderId, eventId, eventSeatId, userId, priceId, paid);
 
-        Assert.That(captured,               Is.Not.Null);
-        Assert.That(captured!.OrderId,      Is.EqualTo(orderId));
-        Assert.That(captured.EventId,       Is.EqualTo(eventId));
-        Assert.That(captured.EventSeatId,   Is.EqualTo(eventSeatId));
-        Assert.That(captured.UserId,        Is.EqualTo(userId));
-        Assert.That(captured.PriceId,       Is.EqualTo(priceId));
-        Assert.That(captured.PaidAmount,    Is.EqualTo(paid));
-        Assert.That(captured.CancelledAt,   Is.Null);
+        Assert.That(captured, Is.Not.Null);
+        Assert.That(captured!.OrderId, Is.EqualTo(orderId));
+        Assert.That(captured.EventId, Is.EqualTo(eventId));
+        Assert.That(captured.EventSeatId, Is.EqualTo(eventSeatId));
+        Assert.That(captured.UserId, Is.EqualTo(userId));
+        Assert.That(captured.PriceId, Is.EqualTo(priceId));
+        Assert.That(captured.PaidAmount, Is.EqualTo(paid));
+        Assert.That(captured.CancelledAt, Is.Null);
     }
 
     [Test]
@@ -107,7 +107,7 @@ public sealed class TicketRepositoryTests
 
         var result = await repo.GetByOrderAsync(orderId);
 
-        Assert.That(result.Count,                    Is.EqualTo(2));
+        Assert.That(result.Count, Is.EqualTo(2));
         Assert.That(result.All(t => t.OrderId == orderId), Is.True);
     }
 
@@ -139,7 +139,7 @@ public sealed class TicketRepositoryTests
 
         var result = await repo.GetByUserAsync(userId);
 
-        Assert.That(result.Count,                    Is.EqualTo(2));
+        Assert.That(result.Count, Is.EqualTo(2));
         Assert.That(result.All(t => t.UserId == userId), Is.True);
     }
 
@@ -147,8 +147,8 @@ public sealed class TicketRepositoryTests
     public async Task GetByUserAsync_ReturnsTicketsDescendingByIssuedAt()
     {
         var userId = Guid.NewGuid();
-        var older  = DateTime.UtcNow.AddDays(-2);
-        var newer  = DateTime.UtcNow;
+        var older = DateTime.UtcNow.AddDays(-2);
+        var newer = DateTime.UtcNow;
         var tickets = new List<Ticket>
         {
             new() { TicketId = Guid.NewGuid(), OrderId = Guid.NewGuid(), UserId = userId, EventId = 1, IssuedAt = older },

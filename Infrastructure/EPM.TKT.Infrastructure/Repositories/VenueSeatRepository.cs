@@ -9,7 +9,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class VenueSeatRepository(ITKTDbContext context) : IVenueSeatRepository
 {
     public async Task<IReadOnlyList<VenueSeatModel>> GetAllAsync(
-        int sectionId, 
+        int sectionId,
         CancellationToken ct = default
     ) => await context.VenueSeats
             .AsNoTracking()
@@ -19,7 +19,7 @@ internal sealed class VenueSeatRepository(ITKTDbContext context) : IVenueSeatRep
             .ToListAsync(ct);
 
     public async Task<VenueSeatModel?> GetByIdAsync(
-        int venueSeatId, 
+        int venueSeatId,
         CancellationToken ct = default
     ) => await context.VenueSeats
             .AsNoTracking()
@@ -28,10 +28,10 @@ internal sealed class VenueSeatRepository(ITKTDbContext context) : IVenueSeatRep
             .FirstOrDefaultAsync(ct);
 
     public async Task<int> CreateAsync(
-        int sectionId, 
-        int? rowId, 
-        string? seatNumber, 
-        int sortOrder, 
+        int sectionId,
+        int? rowId,
+        string? seatNumber,
+        int sortOrder,
         CancellationToken ct = default
     )
     {
@@ -48,9 +48,9 @@ internal sealed class VenueSeatRepository(ITKTDbContext context) : IVenueSeatRep
     }
 
     public async Task UpdateAsync(
-        int venueSeatId, 
-        string? seatNumber, 
-        int sortOrder, 
+        int venueSeatId,
+        string? seatNumber,
+        int sortOrder,
         CancellationToken ct = default
     ) => await context.VenueSeats
             .Where(vs => vs.VenueSeatId == venueSeatId)
@@ -59,7 +59,7 @@ internal sealed class VenueSeatRepository(ITKTDbContext context) : IVenueSeatRep
                 .SetProperty(x => x.SortOrder, sortOrder), ct);
 
     public async Task DeleteAsync(
-        int venueSeatId, 
+        int venueSeatId,
         CancellationToken ct = default
     ) => await context.VenueSeats
             .Where(vs => vs.VenueSeatId == venueSeatId)

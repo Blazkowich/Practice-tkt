@@ -11,15 +11,15 @@ namespace EPM.TKT.InfrastructureTests.Repositories;
 [TestFixture]
 public sealed class UserRepositoryTests
 {
-    private Mock<ITKTDbContext>  _context    = null!;
-    private Mock<DbSet<User>>    _mockUsers  = null!;
+    private Mock<ITKTDbContext> _context = null!;
+    private Mock<DbSet<User>> _mockUsers = null!;
     private Mock<DbSet<UserRole>> _mockRoles = null!;
-    private UserRepository       _repo       = null!;
+    private UserRepository _repo = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _context   = new Mock<ITKTDbContext>();
+        _context = new Mock<ITKTDbContext>();
         _mockUsers = MockDbSet.Create<User>();
         _mockRoles = MockDbSet.Create<UserRole>();
 
@@ -48,12 +48,12 @@ public sealed class UserRepositoryTests
 
         await _repo.CreateUserAsync("alice@example.com", "hash123", "Alice", "Smith");
 
-        Assert.That(captured,            Is.Not.Null);
-        Assert.That(captured!.Email,     Is.EqualTo("alice@example.com"));
+        Assert.That(captured, Is.Not.Null);
+        Assert.That(captured!.Email, Is.EqualTo("alice@example.com"));
         Assert.That(captured.PasswordHash, Is.EqualTo("hash123"));
-        Assert.That(captured.FirstName,  Is.EqualTo("Alice"));
-        Assert.That(captured.LastName,   Is.EqualTo("Smith"));
-        Assert.That(captured.IsActive,   Is.True);
+        Assert.That(captured.FirstName, Is.EqualTo("Alice"));
+        Assert.That(captured.LastName, Is.EqualTo("Smith"));
+        Assert.That(captured.IsActive, Is.True);
     }
 
     [Test]
@@ -69,9 +69,9 @@ public sealed class UserRepositoryTests
 
         await _repo.CreateUserAsync("bob@example.com", "hash", null, null);
 
-        Assert.That(capturedRole,            Is.Not.Null);
-        Assert.That(capturedRole!.RoleId,    Is.EqualTo((byte)RoleType.User));
-        Assert.That(capturedRole.UserId,     Is.EqualTo(capturedUser!.UserId));
+        Assert.That(capturedRole, Is.Not.Null);
+        Assert.That(capturedRole!.RoleId, Is.EqualTo((byte)RoleType.User));
+        Assert.That(capturedRole.UserId, Is.EqualTo(capturedUser!.UserId));
     }
 
     [Test]
@@ -145,9 +145,9 @@ public sealed class UserRepositoryTests
 
         var result = await repo.GetByIdAsync(userId);
 
-        Assert.That(result,         Is.Not.Null);
+        Assert.That(result, Is.Not.Null);
         Assert.That(result!.UserId, Is.EqualTo(userId));
-        Assert.That(result.Email,   Is.EqualTo("eve@example.com"));
+        Assert.That(result.Email, Is.EqualTo("eve@example.com"));
     }
 
     [Test]

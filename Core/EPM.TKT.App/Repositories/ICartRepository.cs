@@ -5,26 +5,26 @@ namespace EPM.TKT.App.Repositories;
 public interface ICartRepository
 {
     Task<CartModel?> GetAsync(
-        Guid cartId, 
+        Guid cartId,
         CancellationToken ct = default
     );
     Task<CartModel> AddSeatAsync(
-        Guid cartId, 
-        Guid userId, 
-        int eventId, 
-        int venueSeatId, 
-        int priceId, 
+        Guid cartId,
+        Guid userId,
+        int eventId,
+        int venueSeatId,
+        int priceId,
         CancellationToken ct = default
     );
     Task RemoveSeatAsync(
-        Guid cartId, 
-        int eventId, 
-        int venueSeatId, 
+        Guid cartId,
+        int eventId,
+        int venueSeatId,
         CancellationToken ct = default
     );
     Task<Guid> BookAsync(
-        Guid cartId, 
-        Guid userId, 
+        Guid cartId,
+        Guid userId,
         CancellationToken ct = default
     );
 }

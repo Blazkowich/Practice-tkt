@@ -5,32 +5,32 @@ namespace EPM.TKT.App.Repositories;
 public interface IUserRepository
 {
     Task<bool> EmailExistsAsync(
-        string email, 
+        string email,
         CancellationToken cancellationToken = default
     );
     Task<IReadOnlyList<UserModel>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<UserAuthInfo?> GetByEmailAsync(
-        string email, 
+        string email,
         CancellationToken cancellationToken = default
     );
     Task<UserAuthInfo?> GetByIdAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken cancellationToken = default
     );
     Task<Guid> CreateUserAsync(
-        string email, 
-        string passwordHash, 
-        string? firstName, 
-        string? lastName, 
+        string email,
+        string passwordHash,
+        string? firstName,
+        string? lastName,
         CancellationToken cancellationToken = default
     );
     Task UpdatePasswordAsync(
-        Guid userId, 
-        string passwordHash, 
+        Guid userId,
+        string passwordHash,
         CancellationToken cancellationToken = default
     );
     Task DeactivateAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken cancellationToken = default
     );
 }

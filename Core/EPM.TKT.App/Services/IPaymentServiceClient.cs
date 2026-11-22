@@ -7,8 +7,8 @@ public interface IPaymentServiceClient
     /// Returns the external payment transaction ID.
     /// </summary>
     Task<Guid> InitiatePaymentAsync(
-        Guid orderId, 
-        decimal amount, 
+        Guid orderId,
+        decimal amount,
         CancellationToken ct = default
     );
 }

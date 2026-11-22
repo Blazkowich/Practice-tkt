@@ -37,8 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Allow test project to access internal types -->
+    <!-- Allow test projects to access internal types -->
     <InternalsVisibleTo Include="EPM.TKT.InfrastructureTests" />
+    <InternalsVisibleTo Include="EPM.TKT.IntegrationTests" />
     <!-- Allow Moq's Castle.DynamicProxy to proxy internal types -->
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>

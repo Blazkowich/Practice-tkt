@@ -9,7 +9,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepository
 {
     public async Task<TicketModel?> GetByIdAsync(
-        Guid ticketId, 
+        Guid ticketId,
         CancellationToken ct = default
     ) => await context.Tickets
             .AsNoTracking()
@@ -18,7 +18,7 @@ internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepositor
             .FirstOrDefaultAsync(ct);
 
     public async Task<IReadOnlyList<TicketModel>> GetByOrderAsync(
-        Guid orderId, 
+        Guid orderId,
         CancellationToken ct = default
     ) => await context.Tickets
             .AsNoTracking()
@@ -27,7 +27,7 @@ internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepositor
             .ToListAsync(ct);
 
     public async Task<IReadOnlyList<TicketModel>> GetByUserAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken ct = default
     ) => await context.Tickets
             .AsNoTracking()
@@ -37,12 +37,12 @@ internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepositor
             .ToListAsync(ct);
 
     public async Task<Guid> CreateAsync(
-        Guid orderId, 
-        int eventId, 
-        long eventSeatId, 
-        Guid userId, 
-        int priceId, 
-        decimal paidAmount, 
+        Guid orderId,
+        int eventId,
+        long eventSeatId,
+        Guid userId,
+        int priceId,
+        decimal paidAmount,
         CancellationToken ct = default
     )
     {
@@ -62,8 +62,8 @@ internal sealed class TicketRepository(ITKTDbContext context) : ITicketRepositor
     }
 
     public async Task CancelAsync(
-        Guid ticketId, 
-        Guid cancelledByManagerId, 
+        Guid ticketId,
+        Guid cancelledByManagerId,
         CancellationToken ct = default
     ) => await context.Tickets
             .Where(t => t.TicketId == ticketId)

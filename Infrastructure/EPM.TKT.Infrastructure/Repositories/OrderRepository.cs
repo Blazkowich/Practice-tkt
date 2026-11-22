@@ -9,7 +9,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class OrderRepository(ITKTDbContext context) : IOrderRepository
 {
     public async Task<OrderModel?> GetByIdAsync(
-        Guid orderId, 
+        Guid orderId,
         CancellationToken ct = default
     ) => await context.Orders
             .AsNoTracking()
@@ -18,7 +18,7 @@ internal sealed class OrderRepository(ITKTDbContext context) : IOrderRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<IReadOnlyList<OrderModel>> GetByUserAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken ct = default
     ) => await context.Orders
             .AsNoTracking()
@@ -28,10 +28,10 @@ internal sealed class OrderRepository(ITKTDbContext context) : IOrderRepository
             .ToListAsync(ct);
 
     public async Task<Guid> CreateAsync(
-        Guid userId, 
-        int eventId, 
-        Guid cartId, 
-        decimal totalAmount, 
+        Guid userId,
+        int eventId,
+        Guid cartId,
+        decimal totalAmount,
         CancellationToken ct = default
     )
     {
@@ -49,8 +49,8 @@ internal sealed class OrderRepository(ITKTDbContext context) : IOrderRepository
     }
 
     public async Task UpdatePaymentTransactionAsync(
-        Guid orderId, 
-        string paymentTransactionId, 
+        Guid orderId,
+        string paymentTransactionId,
         CancellationToken ct = default
     ) => await context.Orders
             .Where(o => o.OrderId == orderId)

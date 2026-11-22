@@ -9,10 +9,10 @@ namespace EPM.TKT.ArchitectureTests;
 /// </summary>
 internal static class TestAssemblies
 {
-    internal static readonly Assembly Domain         = Load(ArchitectureConfig.DomainAssembly);
-    internal static readonly Assembly App            = Load(ArchitectureConfig.AppAssembly);
+    internal static readonly Assembly Domain = Load(ArchitectureConfig.DomainAssembly);
+    internal static readonly Assembly App = Load(ArchitectureConfig.AppAssembly);
     internal static readonly Assembly Infrastructure = Load(ArchitectureConfig.InfrastructureAssembly);
-    internal static readonly Assembly WebApi         = Load(ArchitectureConfig.WebApiAssembly);
+    internal static readonly Assembly WebApi = Load(ArchitectureConfig.WebApiAssembly);
 
     /// <summary>
     /// Returns an already-loaded assembly when available (project reference brought it in),

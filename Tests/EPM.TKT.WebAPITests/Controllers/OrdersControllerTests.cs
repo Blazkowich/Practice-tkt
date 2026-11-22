@@ -52,7 +52,10 @@ public sealed class OrdersControllerTests
 
     private static CartModel FakeCart(Guid cartId) => new()
     {
-        CartId = cartId, EventId = 1, Items = [], TotalAmount = 50m
+        CartId = cartId,
+        EventId = 1,
+        Items = [],
+        TotalAmount = 50m
     };
 
     // ── GetCart ──────────────────────────────────────────────────────────────

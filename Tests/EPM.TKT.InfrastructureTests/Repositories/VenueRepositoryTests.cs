@@ -10,14 +10,14 @@ namespace EPM.TKT.InfrastructureTests.Repositories;
 [TestFixture]
 public sealed class VenueRepositoryTests
 {
-    private Mock<ITKTDbContext> _context    = null!;
-    private Mock<DbSet<Venue>>  _mockVenues = null!;
-    private VenueRepository     _repo       = null!;
+    private Mock<ITKTDbContext> _context = null!;
+    private Mock<DbSet<Venue>> _mockVenues = null!;
+    private VenueRepository _repo = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _context    = new Mock<ITKTDbContext>();
+        _context = new Mock<ITKTDbContext>();
         _mockVenues = MockDbSet.Create<Venue>();
 
         _context.Setup(c => c.Venues).Returns(_mockVenues.Object);
@@ -37,12 +37,12 @@ public sealed class VenueRepositoryTests
 
         await _repo.CreateAsync("Arena", "5 Stadium Rd", "Tbilisi", "Georgia");
 
-        Assert.That(captured,            Is.Not.Null);
-        Assert.That(captured!.Name,      Is.EqualTo("Arena"));
-        Assert.That(captured.Address,    Is.EqualTo("5 Stadium Rd"));
-        Assert.That(captured.City,       Is.EqualTo("Tbilisi"));
-        Assert.That(captured.Country,    Is.EqualTo("Georgia"));
-        Assert.That(captured.IsActive,   Is.True);
+        Assert.That(captured, Is.Not.Null);
+        Assert.That(captured!.Name, Is.EqualTo("Arena"));
+        Assert.That(captured.Address, Is.EqualTo("5 Stadium Rd"));
+        Assert.That(captured.City, Is.EqualTo("Tbilisi"));
+        Assert.That(captured.Country, Is.EqualTo("Georgia"));
+        Assert.That(captured.IsActive, Is.True);
     }
 
     [Test]
@@ -96,8 +96,8 @@ public sealed class VenueRepositoryTests
 
         var result = await repo.GetAllAsync();
 
-        Assert.That(result.Count,      Is.EqualTo(1));
-        Assert.That(result[0].Name,    Is.EqualTo("Active"));
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("Active"));
     }
 
     [Test]
@@ -129,10 +129,10 @@ public sealed class VenueRepositoryTests
 
         var result = await repo.GetByIdAsync(42);
 
-        Assert.That(result,           Is.Not.Null);
-        Assert.That(result!.VenueId,  Is.EqualTo(42));
-        Assert.That(result.Name,      Is.EqualTo("Stadium"));
-        Assert.That(result.City,      Is.EqualTo("Kutaisi"));
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.VenueId, Is.EqualTo(42));
+        Assert.That(result.Name, Is.EqualTo("Stadium"));
+        Assert.That(result.City, Is.EqualTo("Kutaisi"));
     }
 
     [Test]

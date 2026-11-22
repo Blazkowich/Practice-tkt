@@ -17,7 +17,7 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
             .ToListAsync(ct);
 
     public async Task<RoleModel?> GetByIdAsync(
-        RoleType roleType, 
+        RoleType roleType,
         CancellationToken ct = default
     ) => await context.Roles
             .AsNoTracking()
@@ -26,7 +26,7 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<IReadOnlyList<RoleModel>> GetUserRolesAsync(
-        Guid userId, 
+        Guid userId,
         CancellationToken ct = default
     )
         => await context.UserRoles
@@ -61,8 +61,8 @@ internal sealed class RoleRepository(ITKTDbContext context) : IRoleRepository
     }
 
     public async Task RemoveRoleAsync(
-        Guid userId, 
-        RoleType roleType, 
+        Guid userId,
+        RoleType roleType,
         CancellationToken ct = default
     ) => await context.UserRoles
             .Where(ur => ur.UserId == userId && ur.RoleId == (byte)roleType)

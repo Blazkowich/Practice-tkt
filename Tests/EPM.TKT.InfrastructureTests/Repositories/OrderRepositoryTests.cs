@@ -10,14 +10,14 @@ namespace EPM.TKT.InfrastructureTests.Repositories;
 [TestFixture]
 public sealed class OrderRepositoryTests
 {
-    private Mock<ITKTDbContext> _context    = null!;
-    private Mock<DbSet<Order>>  _mockOrders = null!;
-    private OrderRepository     _repo       = null!;
+    private Mock<ITKTDbContext> _context = null!;
+    private Mock<DbSet<Order>> _mockOrders = null!;
+    private OrderRepository _repo = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _context    = new Mock<ITKTDbContext>();
+        _context = new Mock<ITKTDbContext>();
         _mockOrders = MockDbSet.Create<Order>();
 
         _context.Setup(c => c.Orders).Returns(_mockOrders.Object);
@@ -31,8 +31,8 @@ public sealed class OrderRepositoryTests
     [Test]
     public async Task CreateAsync_AddsOrder_WithCorrectFields()
     {
-        var userId  = Guid.NewGuid();
-        var cartId  = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var cartId = Guid.NewGuid();
         const int eventId = 7;
         const decimal total = 149.99m;
 
@@ -42,11 +42,11 @@ public sealed class OrderRepositoryTests
 
         await _repo.CreateAsync(userId, eventId, cartId, total);
 
-        Assert.That(captured,              Is.Not.Null);
-        Assert.That(captured!.UserId,      Is.EqualTo(userId));
-        Assert.That(captured.EventId,      Is.EqualTo(eventId));
-        Assert.That(captured.CartId,       Is.EqualTo(cartId));
-        Assert.That(captured.TotalAmount,  Is.EqualTo(total));
+        Assert.That(captured, Is.Not.Null);
+        Assert.That(captured!.UserId, Is.EqualTo(userId));
+        Assert.That(captured.EventId, Is.EqualTo(eventId));
+        Assert.That(captured.CartId, Is.EqualTo(cartId));
+        Assert.That(captured.TotalAmount, Is.EqualTo(total));
     }
 
     [Test]
@@ -91,8 +91,8 @@ public sealed class OrderRepositoryTests
     public async Task GetByIdAsync_ReturnsOrder_WhenFound()
     {
         var orderId = Guid.NewGuid();
-        var userId  = Guid.NewGuid();
-        var cartId  = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var cartId = Guid.NewGuid();
         var orders = new List<Order>
         {
             new()
@@ -106,10 +106,10 @@ public sealed class OrderRepositoryTests
 
         var result = await repo.GetByIdAsync(orderId);
 
-        Assert.That(result,              Is.Not.Null);
-        Assert.That(result!.OrderId,     Is.EqualTo(orderId));
-        Assert.That(result.TotalAmount,  Is.EqualTo(200m));
-        Assert.That(result.CartId,       Is.EqualTo(cartId));
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.OrderId, Is.EqualTo(orderId));
+        Assert.That(result.TotalAmount, Is.EqualTo(200m));
+        Assert.That(result.CartId, Is.EqualTo(cartId));
     }
 
     [Test]
@@ -148,8 +148,8 @@ public sealed class OrderRepositoryTests
     public async Task GetByUserAsync_ReturnsOrdersDescendingByCreatedAt()
     {
         var userId = Guid.NewGuid();
-        var older  = DateTime.UtcNow.AddDays(-1);
-        var newer  = DateTime.UtcNow;
+        var older = DateTime.UtcNow.AddDays(-1);
+        var newer = DateTime.UtcNow;
         var orders = new List<Order>
         {
             new() { OrderId = Guid.NewGuid(), UserId = userId, EventId = 1, CartId = Guid.NewGuid(), TotalAmount = 10m, CreatedAt = older },

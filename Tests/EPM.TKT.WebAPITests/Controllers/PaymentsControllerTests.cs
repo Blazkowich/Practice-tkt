@@ -29,7 +29,10 @@ public sealed class PaymentsControllerTests
         var paymentId = Guid.NewGuid();
         var payment = new PaymentModel
         {
-            PaymentId = paymentId, CartId = Guid.NewGuid(), Status = "Pending", TotalAmount = 120m
+            PaymentId = paymentId,
+            CartId = Guid.NewGuid(),
+            Status = "Pending",
+            TotalAmount = 120m
         };
         _sender.Setup(s => s.SendAsync(It.IsAny<GetPaymentQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(Result<PaymentModel>.Ok(payment));

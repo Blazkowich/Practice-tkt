@@ -9,7 +9,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class OfferRepository(ITKTDbContext context) : IOfferRepository
 {
     public async Task<IReadOnlyList<OfferModel>> GetAllAsync(
-        int eventId, 
+        int eventId,
         CancellationToken ct = default
     ) => await context.Offers
             .AsNoTracking()
@@ -19,7 +19,7 @@ internal sealed class OfferRepository(ITKTDbContext context) : IOfferRepository
             .ToListAsync(ct);
 
     public async Task<OfferModel?> GetByIdAsync(
-        int offerId, 
+        int offerId,
         CancellationToken ct = default
     ) => await context.Offers
             .AsNoTracking()
@@ -28,10 +28,10 @@ internal sealed class OfferRepository(ITKTDbContext context) : IOfferRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<int> CreateAsync(
-        int eventId, 
-        string name, 
-        DateTime saleStartAt, 
-        DateTime? saleEndAt, 
+        int eventId,
+        string name,
+        DateTime saleStartAt,
+        DateTime? saleEndAt,
         CancellationToken ct = default
     )
     {
@@ -53,11 +53,11 @@ internal sealed class OfferRepository(ITKTDbContext context) : IOfferRepository
     }
 
     public async Task UpdateAsync(
-        int offerId, 
-        string name, 
-        DateTime saleStartAt, 
-        DateTime? saleEndAt, 
-        bool isActive, 
+        int offerId,
+        string name,
+        DateTime saleStartAt,
+        DateTime? saleEndAt,
+        bool isActive,
         CancellationToken ct = default
     )
         => await context.Offers
@@ -69,7 +69,7 @@ internal sealed class OfferRepository(ITKTDbContext context) : IOfferRepository
                 .SetProperty(x => x.IsActive, isActive), ct);
 
     public async Task DeleteAsync(
-        int offerId, 
+        int offerId,
         CancellationToken ct = default
     ) => await context.Offers
             .Where(o => o.OfferId == offerId)

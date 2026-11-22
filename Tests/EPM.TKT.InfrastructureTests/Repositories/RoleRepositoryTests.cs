@@ -11,17 +11,17 @@ namespace EPM.TKT.InfrastructureTests.Repositories;
 [TestFixture]
 public sealed class RoleRepositoryTests
 {
-    private Mock<ITKTDbContext>   _context   = null!;
+    private Mock<ITKTDbContext> _context = null!;
     private Mock<DbSet<UserRole>> _mockUserRoles = null!;
-    private Mock<DbSet<Role>>     _mockRoles = null!;
-    private RoleRepository        _repo      = null!;
+    private Mock<DbSet<Role>> _mockRoles = null!;
+    private RoleRepository _repo = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _context       = new Mock<ITKTDbContext>();
+        _context = new Mock<ITKTDbContext>();
         _mockUserRoles = MockDbSet.Create<UserRole>();
-        _mockRoles     = MockDbSet.Create<Role>();
+        _mockRoles = MockDbSet.Create<Role>();
 
         _context.Setup(c => c.UserRoles).Returns(_mockUserRoles.Object);
         _context.Setup(c => c.Roles).Returns(_mockRoles.Object);
@@ -56,9 +56,9 @@ public sealed class RoleRepositoryTests
 
         await repo.AssignRoleAsync(userId, RoleType.Admin);
 
-        Assert.That(captured,          Is.Not.Null);
-        Assert.That(captured!.UserId,  Is.EqualTo(userId));
-        Assert.That(captured.RoleId,   Is.EqualTo((byte)RoleType.Admin));
+        Assert.That(captured, Is.Not.Null);
+        Assert.That(captured!.UserId, Is.EqualTo(userId));
+        Assert.That(captured.RoleId, Is.EqualTo((byte)RoleType.Admin));
     }
 
     [Test]
@@ -112,8 +112,8 @@ public sealed class RoleRepositoryTests
 
         var result = await repo.GetUserRolesAsync(userId);
 
-        Assert.That(result.Count,         Is.EqualTo(1));
-        Assert.That(result[0].Name,       Is.EqualTo("User"));
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("User"));
     }
 
     [Test]

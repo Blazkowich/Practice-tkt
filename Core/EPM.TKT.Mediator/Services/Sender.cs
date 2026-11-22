@@ -23,7 +23,7 @@ public sealed class Sender(IServiceProvider serviceProvider, IRequestHandlerProv
     }
 
     public async Task SendAsync(
-        IRequest request, 
+        IRequest request,
         CancellationToken ct = default
     )
     {

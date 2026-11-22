@@ -9,7 +9,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class RowRepository(ITKTDbContext context) : IRowRepository
 {
     public async Task<IReadOnlyList<RowModel>> GetAllAsync(
-        int sectionId, 
+        int sectionId,
         CancellationToken ct = default
     ) => await context.Rows
             .AsNoTracking()
@@ -19,7 +19,7 @@ internal sealed class RowRepository(ITKTDbContext context) : IRowRepository
             .ToListAsync(ct);
 
     public async Task<RowModel?> GetByIdAsync(
-        int rowId, 
+        int rowId,
         CancellationToken ct = default
     ) => await context.Rows
             .AsNoTracking()
@@ -28,9 +28,9 @@ internal sealed class RowRepository(ITKTDbContext context) : IRowRepository
             .FirstOrDefaultAsync(ct);
 
     public async Task<int> CreateAsync(
-        int sectionId, 
-        string name, 
-        int sortOrder, 
+        int sectionId,
+        string name,
+        int sortOrder,
         CancellationToken ct = default
     )
     {
@@ -46,9 +46,9 @@ internal sealed class RowRepository(ITKTDbContext context) : IRowRepository
     }
 
     public async Task UpdateAsync(
-        int rowId, 
-        string name, 
-        int sortOrder, 
+        int rowId,
+        string name,
+        int sortOrder,
         CancellationToken ct = default
     )
         => await context.Rows
@@ -58,7 +58,7 @@ internal sealed class RowRepository(ITKTDbContext context) : IRowRepository
                 .SetProperty(x => x.SortOrder, sortOrder), ct);
 
     public async Task DeleteAsync(
-        int rowId, 
+        int rowId,
         CancellationToken ct = default
     ) => await context.Rows
             .Where(r => r.RowId == rowId)

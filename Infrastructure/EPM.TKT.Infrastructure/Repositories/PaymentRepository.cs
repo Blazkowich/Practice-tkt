@@ -25,15 +25,15 @@ internal sealed class PaymentRepository(ITKTDbContext context) : IPaymentReposit
 
         return new PaymentModel
         {
-            PaymentId   = paymentId,
-            CartId      = order.CartId,
-            Status      = ((OrderStatusType)order.OrderStatusId).ToString(),
+            PaymentId = paymentId,
+            CartId = order.CartId,
+            Status = ((OrderStatusType)order.OrderStatusId).ToString(),
             TotalAmount = order.TotalAmount
         };
     }
 
     public async Task CompleteAsync(
-        Guid paymentId, 
+        Guid paymentId,
         CancellationToken ct = default
     )
     {
@@ -67,7 +67,7 @@ internal sealed class PaymentRepository(ITKTDbContext context) : IPaymentReposit
     }
 
     public async Task FailAsync(
-        Guid paymentId, 
+        Guid paymentId,
         CancellationToken ct = default
     )
     {

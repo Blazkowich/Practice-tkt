@@ -49,7 +49,7 @@ internal sealed class TestAsyncQueryProvider<TEntity>(IQueryProvider inner) : IA
 internal sealed class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
 {
     public TestAsyncEnumerable(IEnumerable<T> enumerable) : base(enumerable) { }
-    public TestAsyncEnumerable(Expression expression)   : base(expression)   { }
+    public TestAsyncEnumerable(Expression expression) : base(expression) { }
 
     // Override Provider so the async query provider is used instead of LINQ-to-Objects
     IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
@@ -73,7 +73,7 @@ internal static class MockDbSet
 {
     public static Mock<DbSet<T>> Create<T>(IList<T>? seed = null) where T : class
     {
-        var list  = seed ?? [];
+        var list = seed ?? [];
         var query = new TestAsyncEnumerable<T>(list);
 
         var mock = new Mock<DbSet<T>>();
@@ -84,9 +84,9 @@ internal static class MockDbSet
 
         // EnumerableQuery<T> implements IQueryable<T> explicitly — cast required
         var q = (IQueryable<T>)query;
-        mock.As<IQueryable<T>>().Setup(m => m.Provider)    .Returns(q.Provider);
-        mock.As<IQueryable<T>>().Setup(m => m.Expression)  .Returns(q.Expression);
-        mock.As<IQueryable<T>>().Setup(m => m.ElementType) .Returns(q.ElementType);
+        mock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(q.Provider);
+        mock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(q.Expression);
+        mock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(q.ElementType);
         mock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(() => list.GetEnumerator());
 
         return mock;

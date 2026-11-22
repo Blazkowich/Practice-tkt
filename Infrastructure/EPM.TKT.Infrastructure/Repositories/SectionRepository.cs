@@ -10,7 +10,7 @@ namespace EPM.TKT.Infrastructure.Repositories;
 internal sealed class SectionRepository(ITKTDbContext context) : ISectionRepository
 {
     public async Task<IReadOnlyList<SectionModel>> GetAllAsync(
-        int venueId, 
+        int venueId,
         CancellationToken ct = default
     ) => await context.Sections
             .AsNoTracking()
@@ -20,7 +20,7 @@ internal sealed class SectionRepository(ITKTDbContext context) : ISectionReposit
             .ToListAsync(ct);
 
     public async Task<SectionModel?> GetByIdAsync(
-        int sectionId, 
+        int sectionId,
         CancellationToken ct = default
     ) => await context.Sections
             .AsNoTracking()
@@ -29,10 +29,10 @@ internal sealed class SectionRepository(ITKTDbContext context) : ISectionReposit
             .FirstOrDefaultAsync(ct);
 
     public async Task<int> CreateAsync(
-        int venueId, 
-        string name, 
-        SeatType seatType, 
-        int sortOrder, 
+        int venueId,
+        string name,
+        SeatType seatType,
+        int sortOrder,
         CancellationToken ct = default
     )
     {
@@ -49,10 +49,10 @@ internal sealed class SectionRepository(ITKTDbContext context) : ISectionReposit
     }
 
     public async Task UpdateAsync(
-        int sectionId, 
+        int sectionId,
         string name,
         SeatType seatType,
-        int sortOrder, 
+        int sortOrder,
         CancellationToken ct = default
     ) => await context.Sections
             .Where(s => s.SectionId == sectionId)
@@ -62,7 +62,7 @@ internal sealed class SectionRepository(ITKTDbContext context) : ISectionReposit
                 .SetProperty(x => x.SortOrder, sortOrder), ct);
 
     public async Task DeleteAsync(
-        int sectionId, 
+        int sectionId,
         CancellationToken ct = default
     ) => await context.Sections
             .Where(s => s.SectionId == sectionId)
